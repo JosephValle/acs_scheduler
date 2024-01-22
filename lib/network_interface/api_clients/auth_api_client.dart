@@ -40,9 +40,9 @@ class AuthApiClient {
   /// This method will trigger the google sign in method. This will display the proper native items to have a user login and redirect accordingly
   Future<Profile?> signIn() async {
     final GoogleSignInAccount? googleUser = await GoogleSignIn(
-      clientId:
-          kDebugMode ?
-          '215002605660-k33su7pe60atmvmf3iv97mcggbb4p3vq.apps.googleusercontent.com' : '215002605660-d2fjkhsnbbgijvjg7lst9k60cs61f6lm.apps.googleusercontent.com',
+      clientId: kDebugMode
+          ? '215002605660-k33su7pe60atmvmf3iv97mcggbb4p3vq.apps.googleusercontent.com'
+          : '215002605660-d2fjkhsnbbgijvjg7lst9k60cs61f6lm.apps.googleusercontent.com',
     ).signIn(); //todo must add the hostdomain for the clients
 
     final GoogleSignInAuthentication? googleAuth =
