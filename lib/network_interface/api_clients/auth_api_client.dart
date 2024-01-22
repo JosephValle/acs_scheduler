@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../objects/profile.dart';
@@ -16,10 +17,9 @@ class AuthApiClient {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   ///This will signout the firebase auth user
-  Future<void> signOut() async{
+  Future<void> signOut() async {
     await _auth.signOut();
   }
-
 
   /// This will return a profile for a userId if that profile exists
   ///
@@ -27,8 +27,11 @@ class AuthApiClient {
   Future<Profile?> getProfile({required String userId}) async {
     try {
       return Profile.fromJson(
-          (await _firestore.collection(usersCollection).doc(userId).get()).data() ?? {},);
-    }catch(e){
+        (await _firestore.collection(usersCollection).doc(userId).get())
+                .data() ??
+            {},
+      );
+    } catch (e) {
       debugPrint('failed to get user $userId: $e');
       return null;
     }
@@ -36,11 +39,11 @@ class AuthApiClient {
 
   /// This method will trigger the google sign in method. This will display the proper native items to have a user login and redirect accordingly
   Future<Profile?> signIn() async {
-
     final GoogleSignInAccount? googleUser = await GoogleSignIn(
-            clientId:
-                '215002605660-k33su7pe60atmvmf3iv97mcggbb4p3vq.apps.googleusercontent.com',)
-        .signIn(); //todo must add the hostdomain for the clients
+      clientId:
+          kDebugMode ?
+          '215002605660-k33su7pe60atmvmf3iv97mcggbb4p3vq.apps.googleusercontent.com' : '215002605660-d2fjkhsnbbgijvjg7lst9k60cs61f6lm.apps.googleusercontent.com',
+    ).signIn(); //todo must add the hostdomain for the clients
 
     final GoogleSignInAuthentication? googleAuth =
         await googleUser?.authentication;
@@ -58,7 +61,10 @@ class AuthApiClient {
       profile = await getProfile(userId: userCredential.user!.uid);
 
       if (profile == null) {
-        await _firestore.collection(usersCollection).doc(userCredential.user!.uid).set({
+        await _firestore
+            .collection(usersCollection)
+            .doc(userCredential.user!.uid)
+            .set({
           'id': userCredential.user!.uid,
           'email': userCredential.user!.email,
           'displayName': userCredential.user!.displayName,
@@ -66,11 +72,12 @@ class AuthApiClient {
         });
 
         profile = Profile(
-            email: userCredential.user!.email!,
-            id: userCredential.user!.uid,
-            isAdmin: false,
-            imageUrl: userCredential.user!.photoURL ?? '',
-            displayName: userCredential.user!.displayName ?? '',);
+          email: userCredential.user!.email!,
+          id: userCredential.user!.uid,
+          isAdmin: false,
+          imageUrl: userCredential.user!.photoURL ?? '',
+          displayName: userCredential.user!.displayName ?? '',
+        );
       }
     }
     return profile;
