@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 
 /// This is a resuable widget for displaying SVGS
@@ -22,7 +21,6 @@ class SvgIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return Image.asset(
       'assets/images/png/$name.png',
-      // colorFilter: color == null ? null : ColorFilter.mode(color!, BlendMode.srcIn),
       height: size ?? 20,
       fit: BoxFit.fitHeight,
     );
