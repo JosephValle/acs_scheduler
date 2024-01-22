@@ -147,7 +147,7 @@ class AdamsCountScheduler extends StatelessWidget {
           ),
           darkTheme: ThemeData(
             colorScheme: darkColorScheme,
-            tabBarTheme: DarkTabBarTheme(),
+            tabBarTheme: DarkTabBarTheme()
           ),
           routes: RoutesMap.routesMap,
           initialRoute:
