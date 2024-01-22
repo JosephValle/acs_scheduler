@@ -1,0 +1,29 @@
+
+include: package:flutter_lints/flutter.yaml
+
+linter:
+
+  rules:
+    constant_identifier_names: false # allow lowercase enums
+    prefer_const_literals_to_create_immutables: true
+    prefer_const_constructors_in_immutables: true
+    use_full_hex_values_for_flutter_colors: true
+    avoid_multiple_declarations_per_line: true
+    use_build_context_synchronously: false
+    use_key_in_widget_constructors: true
+    avoid_web_libraries_in_flutter: true
+    avoid_unnecessary_containers: true
+    sort_child_properties_last: true
+    always_declare_return_types: true
+    prefer_const_declarations: true
+    use_rethrow_when_possible: true
+    type_annotate_public_apis: true
+    prefer_const_constructors: true
+    sized_box_for_whitespace: true
+    no_logic_in_create_state: true
+    require_trailing_commas: true
+    camel_case_extensions: true
+    prefer_single_quotes: true
+    prefer_final_fields: true
+    eol_at_end_of_file: true
+    camel_case_types: true
