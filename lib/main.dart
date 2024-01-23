@@ -136,7 +136,7 @@ class AdamsCountScheduler extends StatelessWidget {
           ),
           BlocProvider<StudentSortCubit>(
             create: (context) => StudentSortCubit(),
-          )
+          ),
         ],
         child: MaterialApp(
           title: 'Career Scheduler',
@@ -146,7 +146,9 @@ class AdamsCountScheduler extends StatelessWidget {
             tabBarTheme: LightTabBarTheme(),
           ),
           darkTheme: ThemeData(
-              colorScheme: darkColorScheme, tabBarTheme: DarkTabBarTheme()),
+            colorScheme: darkColorScheme,
+            tabBarTheme: DarkTabBarTheme(),
+          ),
           routes: RoutesMap.routesMap,
           initialRoute:
               currentUser == null ? Routes.signInPage : Routes.homePage,
