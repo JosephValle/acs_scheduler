@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -41,7 +43,10 @@ class AuthApiClient {
     final GoogleSignInAccount? googleUser = await GoogleSignIn(
       clientId: kDebugMode
           ? '215002605660-k33su7pe60atmvmf3iv97mcggbb4p3vq.apps.googleusercontent.com'
-          : '215002605660-d2fjkhsnbbgijvjg7lst9k60cs61f6lm.apps.googleusercontent.com',
+          : window.location.href.toLowerCase().contains('github')
+              ? '215002605660-646g89sf65ug00ibvtp69cm1l7gf8bqb.apps.googleusercontent.com'
+      // TODO: Implement ACS
+              : '',
     ).signIn(); //todo must add the hostdomain for the clients
 
     final GoogleSignInAuthentication? googleAuth =
