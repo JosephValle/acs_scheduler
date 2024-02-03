@@ -31,8 +31,9 @@ class StudentsPage extends StatelessWidget {
                     cursor: SystemMouseCursors.click,
                     child: ColoredContainer(
                       onTap: () => showDialog(
-                          context: context,
-                          builder: (context) => const ClearStudentsDialog(),),
+                        context: context,
+                        builder: (context) => const ClearStudentsDialog(),
+                      ),
                       backgroundColor: ACColors.secondaryColor,
                       child: const Text('Clear All'),
                     ),
