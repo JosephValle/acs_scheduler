@@ -1,4 +1,3 @@
-
 import 'package:adams_county_scheduler/objects/school.dart';
 import 'package:bloc/bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -22,9 +21,10 @@ class SchoolsBloc extends Bloc<SchoolsEvent, SchoolsState> {
     on<UploadSchool>(_mapUploadSchoolToState);
     on<UploadProgressUpdated>(_mapUploadProgressUpdatedToState);
     on<LoadSchools>(_mapLoadSchoolsToState);
+    on<DeleteSchool>(_deleteSchool);
   }
 
-  void _mapLoadSchoolsToState(LoadSchools event, emit) async{
+  void _mapLoadSchoolsToState(LoadSchools event, emit) async {
     schools = await _schoolsRepository.loadSchools();
 
     emit(SchoolsLoaded(schools: schools));
@@ -33,46 +33,58 @@ class SchoolsBloc extends Bloc<SchoolsEvent, SchoolsState> {
   void _mapCreateSchoolToState(CreateSchool event, emit) async {
     if (event.image != null) {
       await _schoolsRepository.uploadSchoolImage(
-          schoolShortName: event.schoolShortName,
-          image: event.image!,
-          onFinished: (String url) async {
-            add(
-              UploadSchool(
-                  imageUrl: url,
-                  schoolShortName: event.schoolShortName,
-                  schoolName: event.schoolName,
-                  category: event.category,),
-            );
-          },
-          onProgress: (double progress) {
-            add(UploadProgressUpdated(progress: progress));
-            if (progress >= 100) {}
-          },);
+        schoolShortName: event.schoolShortName,
+        image: event.image!,
+        onFinished: (String url) async {
+          add(
+            UploadSchool(
+              imageUrl: url,
+              schoolShortName: event.schoolShortName,
+              schoolName: event.schoolName,
+              category: event.category,
+            ),
+          );
+        },
+        onProgress: (double progress) {
+          add(UploadProgressUpdated(progress: progress));
+          if (progress >= 100) {}
+        },
+      );
     } else {
       add(
         UploadSchool(
-            imageUrl: null,
-            schoolShortName: event.schoolShortName,
-            schoolName: event.schoolName,
-            category: event.category,),
+          imageUrl: null,
+          schoolShortName: event.schoolShortName,
+          schoolName: event.schoolName,
+          category: event.category,
+        ),
       );
     }
   }
 
   void _mapUploadProgressUpdatedToState(
-      UploadProgressUpdated event, emit,) async {
+    UploadProgressUpdated event,
+    emit,
+  ) async {
     emit(
-        ImageUploadProgressUpdated(schools: schools, progress: event.progress),);
+      ImageUploadProgressUpdated(schools: schools, progress: event.progress),
+    );
   }
 
   void _mapUploadSchoolToState(UploadSchool event, emit) async {
     School newSchool = await _schoolsRepository.createSchool(
-        schoolName: event.schoolName,
-        schoolShortName: event.schoolShortName,
-        category: event.category,
-        imageUrl: event.imageUrl,);
+      schoolName: event.schoolName,
+      schoolShortName: event.schoolShortName,
+      category: event.category,
+      imageUrl: event.imageUrl,
+    );
 
     schools.add(newSchool);
     emit(SchoolCreated(schools: schools));
+  }
+
+  void _deleteSchool(DeleteSchool event, emit) async {
+    schools.removeWhere((element) => element.id == event.school.id);
+    emit(SchoolsLoaded(schools: schools));
   }
 }

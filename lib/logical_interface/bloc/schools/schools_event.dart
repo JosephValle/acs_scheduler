@@ -3,6 +3,14 @@ part of 'schools_bloc.dart';
 @immutable
 abstract class SchoolsEvent {}
 
+class DeleteSchool extends SchoolsEvent {
+  final School school;
+
+  DeleteSchool({
+    required this.school,
+  });
+}
+
 class CreateSchool extends SchoolsEvent {
   final String schoolName;
   final String schoolShortName;

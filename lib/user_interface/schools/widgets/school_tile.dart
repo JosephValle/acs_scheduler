@@ -1,5 +1,6 @@
 import 'package:adams_county_scheduler/objects/school.dart';
 import 'package:adams_county_scheduler/user_interface/school_detail/school_detail_page.dart';
+import 'package:adams_county_scheduler/user_interface/schools/widgets/school_delete_dialog.dart';
 import 'package:adams_county_scheduler/user_interface/widgets/colored_container.dart';
 import 'package:adams_county_scheduler/utilities/colors/ac_colors.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -143,6 +144,15 @@ class SchoolTile extends StatelessWidget {
                                   ),
                                 ),
                               ),
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () =>
+                              showDialog(context: context, builder: (context) => SchoolDeleteDialog(school: school, ))
+                            ,
+                          ),
+                        ),
                       ],
                     ),
                   ),
