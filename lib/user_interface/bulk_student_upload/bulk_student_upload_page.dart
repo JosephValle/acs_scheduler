@@ -1,4 +1,3 @@
-
 import 'package:adams_county_scheduler/logical_interface/bloc/students/students_bloc.dart';
 import 'package:adams_county_scheduler/user_interface/widgets/colored_container.dart';
 import 'package:file_picker/file_picker.dart';
@@ -45,19 +44,20 @@ class _BulkStudentUploadPageState extends State<BulkStudentUploadPage> {
             firstChild: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Center(
                     child: Container(
                       constraints: BoxConstraints(
-                        maxWidth: MediaQuery.of(context).size.width / 4,),
+                        maxWidth: MediaQuery.of(context).size.width / 4,
+                      ),
                       child: MouseRegion(
                         cursor: SystemMouseCursors.click,
                         child: ColoredContainer(
                           onTap: () async {
-                            firebase_storage.Reference ref =
-                            firebase_storage.FirebaseStorage.instance.ref('templates/TestData.xlsx');
+                            firebase_storage.Reference ref = firebase_storage
+                                .FirebaseStorage.instance
+                                .ref('templates/TestData.xlsx');
 
                             // Get the download URL
                             String url = await ref.getDownloadURL();
@@ -67,12 +67,12 @@ class _BulkStudentUploadPageState extends State<BulkStudentUploadPage> {
                             html.Url.revokeObjectUrl(url);
                           },
                           backgroundColor:
-                          Theme.of(context).colorScheme.primary,
+                              Theme.of(context).colorScheme.primary,
                           child: Text(
                             'Download Template File',
                             style: TextStyle(
-                              color:
-                              Theme.of(context).colorScheme.background,),
+                              color: Theme.of(context).colorScheme.background,
+                            ),
                           ),
                         ),
                       ),
@@ -84,7 +84,8 @@ class _BulkStudentUploadPageState extends State<BulkStudentUploadPage> {
                   child: Center(
                     child: Container(
                       constraints: BoxConstraints(
-                          maxWidth: MediaQuery.of(context).size.width / 4,),
+                        maxWidth: MediaQuery.of(context).size.width / 4,
+                      ),
                       child: MouseRegion(
                         cursor: SystemMouseCursors.click,
                         child: ColoredContainer(
@@ -108,8 +109,11 @@ class _BulkStudentUploadPageState extends State<BulkStudentUploadPage> {
                                 List<Data?> headers = sheet.row(0);
 
                                 List<String> headerValues = headers
-                                    .map<String>((e) =>
-                                        e?.value.toString().toLowerCase() ?? '',)
+                                    .map<String>(
+                                      (e) =>
+                                          e?.value.toString().toLowerCase() ??
+                                          '',
+                                    )
                                     .toList();
                                 headerValues.sort((a, b) => a.compareTo(b));
                                 cells.sort((a, b) => a.compareTo(b));
@@ -134,8 +138,8 @@ class _BulkStudentUploadPageState extends State<BulkStudentUploadPage> {
                           child: Text(
                             'Select File',
                             style: TextStyle(
-                                color:
-                                    Theme.of(context).colorScheme.background,),
+                              color: Theme.of(context).colorScheme.background,
+                            ),
                           ),
                         ),
                       ),
@@ -146,7 +150,8 @@ class _BulkStudentUploadPageState extends State<BulkStudentUploadPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: error.isEmpty
                       ? const Text(
-                          'Please select an excel file with column headers "First Name", "Last Name", "School", "n priorty" with values 1-5 for n',)
+                          'Please select an excel file with column headers "First Name", "Last Name", "School", "n priorty" with values 1-5 for n',
+                        )
                       : Text(
                           error,
                           style: const TextStyle(color: Colors.red),
@@ -168,24 +173,27 @@ class _BulkStudentUploadPageState extends State<BulkStudentUploadPage> {
                         child: Center(
                           child: Container(
                             constraints: BoxConstraints(
-                                maxWidth:
-                                    MediaQuery.of(context).size.width / 4,),
+                              maxWidth: MediaQuery.of(context).size.width / 4,
+                            ),
                             child: MouseRegion(
                               cursor: SystemMouseCursors.click,
                               child: ColoredContainer(
                                 onTap: () async {
                                   context.read<StudentsBloc>().add(
-                                      BulkUploadStudents(
-                                          sheet: uploadedSheet!,),);
+                                        BulkUploadStudents(
+                                          sheet: uploadedSheet!,
+                                        ),
+                                      );
                                 },
                                 backgroundColor:
                                     Theme.of(context).colorScheme.secondary,
                                 child: Text(
                                   'Upload $maxSize Students',
                                   style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .background,),
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .background,
+                                  ),
                                 ),
                               ),
                             ),
@@ -195,8 +203,8 @@ class _BulkStudentUploadPageState extends State<BulkStudentUploadPage> {
               ],
             ),
             secondChild: state is BulkUploadStarted
-                ?  const Center(
-                  child:  Column(
+                ? const Center(
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -207,14 +215,15 @@ class _BulkStudentUploadPageState extends State<BulkStudentUploadPage> {
                         Padding(
                           padding: EdgeInsets.all(8.0),
                           child: Text(
-                              'We are rolling the students into the cloud.. This may take a moment',),
+                            'We are rolling the students into the cloud.. This may take a moment',
+                          ),
                         ),
                       ],
                     ),
-                )
+                  )
                 : state is UploadFinished
                     ? Center(
-                      child: Column(
+                        child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -233,7 +242,8 @@ class _BulkStudentUploadPageState extends State<BulkStudentUploadPage> {
                             state.errors.isEmpty
                                 ? Container()
                                 : const Text(
-                                    'We ran into errors with the following students...',),
+                                    'We ran into errors with the following students...',
+                                  ),
                             state.errors.isEmpty
                                 ? Container()
                                 : Expanded(
@@ -241,7 +251,8 @@ class _BulkStudentUploadPageState extends State<BulkStudentUploadPage> {
                                       child: ListView.builder(
                                         shrinkWrap: true,
                                         itemCount: state.errors.length,
-                                        itemBuilder: (context, index) => Padding(
+                                        itemBuilder: (context, index) =>
+                                            Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: Text(
                                             state.errors.elementAt(index),
@@ -252,7 +263,7 @@ class _BulkStudentUploadPageState extends State<BulkStudentUploadPage> {
                                   ),
                           ],
                         ),
-                    )
+                      )
                     : Container(),
             crossFadeState:
                 (state is BulkUploadStarted || state is UploadFinished)
