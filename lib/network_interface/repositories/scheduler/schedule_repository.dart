@@ -158,13 +158,16 @@ class ScheduleRepository extends BaseScheduleRepository {
       debugPrint('Done Firebase: ${stopwatch.elapsedMilliseconds} ms in');
       stopwatch.stop();
 
-      await _schedulerApiClient.createMasterList(schedules: exportStudentSchedule);
-      await _schedulerApiClient.createStudentSchedule(schedules: exportStudentSchedule);
+      await _schedulerApiClient.createMasterList(
+          schedules: exportStudentSchedule);
+      await _schedulerApiClient.createStudentSchedule(
+          schedules: exportStudentSchedule);
       await _schedulerApiClient.createAttendanceSchedule(
         careerSessions: exportCareerSchedule,
         times: timeSessions,
       );
-      await _schedulerApiClient.createCareerCounts(careers: exportCareerSchedule);
+      await _schedulerApiClient.createCareerCounts(
+          careers: exportCareerSchedule);
     } catch (e) {
       debugPrint('Error with firebase: $e');
     }
@@ -298,6 +301,11 @@ class ScheduleRepository extends BaseScheduleRepository {
       );
       for (int i = 0; i < 5; i++) {
         final int careerPriority = getCareerId(index: i, student: student);
+        if (careerPriority <= 0) {
+          continue;
+        }
+        print(
+            "Excel: temp, Career: $careerPriority, ${student.lastName}, $i, ${student.id}");
         final Career career =
             careers.firstWhere((element) => element.excelNum == careerPriority);
         final List<ClassSession> correspondingClasses =
@@ -354,5 +362,4 @@ class ScheduleRepository extends BaseScheduleRepository {
         (session) =>
             correspondingClass.timeSession.time == session.timeSession.time,
       );
-
 }

@@ -11,8 +11,12 @@ import 'package:adams_county_scheduler/utilities/colors/ac_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../objects/student.dart';
+
 class StudentCreationPage extends StatefulWidget {
-  const StudentCreationPage({super.key});
+  final Student? student;
+
+  const StudentCreationPage({this.student, super.key});
 
   @override
   State<StudentCreationPage> createState() => _StudentCreationPageState();
@@ -36,6 +40,13 @@ class _StudentCreationPageState extends State<StudentCreationPage> {
   @override
   void initState() {
     school = context.read<SchoolsBloc>().schools.first;
+    Student? student = widget.student;
+    if (student !=null) {
+      _firstNameController.text = student.firstName;
+      _lastNameController.text = student.lastName;
+      _firstNameController.text = student.firstName;
+      priority = student.careerPriority;
+    }
     super.initState();
   }
 
@@ -51,11 +62,12 @@ class _StudentCreationPageState extends State<StudentCreationPage> {
                 ),
               );
           Navigator.of(context).pop();
+
         }
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Add a Student'),
+          title: const Text('Update a Student'),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -127,7 +139,7 @@ class _StudentCreationPageState extends State<StudentCreationPage> {
                   setState(() {
                     priority = newPriority;
                   });
-                },
+                }, careerPriority: priority,
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),

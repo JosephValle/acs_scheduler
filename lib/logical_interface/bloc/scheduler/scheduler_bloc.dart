@@ -27,6 +27,9 @@ class SchedulerBloc extends Bloc<SchedulerEvent, SchedulerState> {
         emit(SchedulerLoaded());
       } catch (e) {
         debugPrint('Error Getting Scheduler: $e');
+        if (e is Error) {
+          print(e.stackTrace);
+        }
         emit(SchedulerError(error: e.toString()));
       }
     });
@@ -38,7 +41,10 @@ class SchedulerBloc extends Bloc<SchedulerEvent, SchedulerState> {
         reports = await SchedulerApiClient().getAllReports();
         emit(SchedulerLoaded());
       } catch (e) {
-        debugPrint('Error Getting Scheduler: $e');
+        debugPrint('Error Generating Schedule: $e');
+        if (e is Error) {
+          print(e.stackTrace);
+        }
         emit(SchedulerError(error: e.toString()));
       }
     });

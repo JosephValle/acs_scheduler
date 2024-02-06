@@ -3,9 +3,10 @@ import 'package:adams_county_scheduler/user_interface/widgets/input_field.dart';
 import 'package:flutter/cupertino.dart';
 
 class CareerPriorityBuilder extends StatefulWidget {
+  final CareerPriority careerPriority;
   final Function(CareerPriority) onChanged;
 
-  const CareerPriorityBuilder({super.key, required this.onChanged});
+  const CareerPriorityBuilder({required this.careerPriority, super.key, required this.onChanged});
 
   @override
   State<CareerPriorityBuilder> createState() => _CareerPriorityBuilderState();
@@ -19,6 +20,14 @@ class _CareerPriorityBuilderState extends State<CareerPriorityBuilder> {
     TextEditingController(),
     TextEditingController(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.careerPriority.firstChoice != -1) {
+      // TODO: Finish implemented 
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +50,7 @@ class _CareerPriorityBuilderState extends State<CareerPriorityBuilder> {
                 ),
               );
             },
-            hintText: 'Police, Fire fighter, etc.',
+            hintText: '1, 2, 3, 4',
             controller: controllers[index],
           ),
         );

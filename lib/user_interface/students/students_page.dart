@@ -1,5 +1,6 @@
 import 'package:adams_county_scheduler/logical_interface/bloc/students/students_bloc.dart';
 import 'package:adams_county_scheduler/logical_interface/cubit/student_sort/student_sort_cubit.dart';
+import 'package:adams_county_scheduler/user_interface/student_creation/student_creation_page.dart';
 import 'package:adams_county_scheduler/user_interface/students/widgets/clear_students_dialog.dart';
 import 'package:adams_county_scheduler/user_interface/widgets/colored_container.dart';
 import 'package:adams_county_scheduler/utilities/colors/ac_colors.dart';
@@ -199,6 +200,9 @@ class StudentsPage extends StatelessWidget {
                                     ),
                             label: const Expanded(child: Text('Fifth Choice')),
                           ),
+                          DataColumn(
+                            label: const Expanded(child: Text('Edit ')),
+                          ),
                         ],
                         rows: state.students
                             .map<DataRow>(
@@ -236,6 +240,21 @@ class StudentsPage extends StatelessWidget {
                                   DataCell(
                                     Text(
                                       e.careerPriority.fifthChoice.toString(),
+                                    ),
+                                  ),
+                                  DataCell(
+                                    IconButton(
+                                      icon: Icon(Icons.edit),
+                                      onPressed: () => {
+                                        // TODO: Implement Student Editing
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    StudentCreationPage(
+                                                      student: e,
+                                                    )))
+                                      },
                                     ),
                                   ),
                                 ],
