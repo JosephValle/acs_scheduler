@@ -304,10 +304,11 @@ class ScheduleRepository extends BaseScheduleRepository {
         if (careerPriority <= 0) {
           continue;
         }
-        print(
-            "Excel: temp, Career: $careerPriority, ${student.lastName}, $i, ${student.id}");
         final Career career =
             careers.firstWhere((element) => element.excelNum == careerPriority);
+        if (career.excelNum == 86) {
+          print(career.name);
+        }
         final List<ClassSession> correspondingClasses =
             classes.where((element) => element.career.id == career.id).toList();
         for (ClassSession correspondingClass in correspondingClasses) {
