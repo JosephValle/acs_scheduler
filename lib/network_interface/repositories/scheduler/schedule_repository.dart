@@ -161,15 +161,15 @@ class ScheduleRepository extends BaseScheduleRepository {
       stopwatch.stop();
 
       await _schedulerApiClient.createMasterList(
-          schedules: exportStudentSchedule);
+          schedules: exportStudentSchedule,);
       await _schedulerApiClient.createStudentSchedule(
-          schedules: exportStudentSchedule);
+          schedules: exportStudentSchedule,);
       await _schedulerApiClient.createAttendanceSchedule(
         careerSessions: exportCareerSchedule,
         times: timeSessions,
       );
       await _schedulerApiClient.createCareerCounts(
-          careers: exportCareerSchedule);
+          careers: exportCareerSchedule,);
     } catch (e) {
       debugPrint('Error with firebase: $e');
     }
@@ -216,7 +216,7 @@ class ScheduleRepository extends BaseScheduleRepository {
         sum += 1;
       }
     }
-    print("Total Sessions: $sum");
+    print('Total Sessions: $sum');
   }
 
   void _finalAssignment() {

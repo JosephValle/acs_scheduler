@@ -200,8 +200,8 @@ class StudentsPage extends StatelessWidget {
                                     ),
                             label: const Expanded(child: Text('Fifth Choice')),
                           ),
-                          DataColumn(
-                            label: const Expanded(child: Text('Edit ')),
+                          const DataColumn(
+                            label: Expanded(child: Text('Edit ')),
                           ),
                         ],
                         rows: state.students
@@ -244,7 +244,7 @@ class StudentsPage extends StatelessWidget {
                                   ),
                                   DataCell(
                                     IconButton(
-                                      icon: Icon(Icons.edit),
+                                      icon: const Icon(Icons.edit),
                                       onPressed: () => {
                                         // TODO: Implement Student Editing
                                         Navigator.push(
@@ -253,7 +253,7 @@ class StudentsPage extends StatelessWidget {
                                                 builder: (context) =>
                                                     StudentCreationPage(
                                                       student: e,
-                                                    )))
+                                                    ),),),
                                       },
                                     ),
                                   ),
