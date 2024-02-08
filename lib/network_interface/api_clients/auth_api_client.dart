@@ -1,4 +1,4 @@
-import 'dart:html';
+import 'package:universal_html/html.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -45,7 +45,7 @@ class AuthApiClient {
           ? '215002605660-k33su7pe60atmvmf3iv97mcggbb4p3vq.apps.googleusercontent.com'
           : window.location.href.toLowerCase().contains('github')
               ? '215002605660-646g89sf65ug00ibvtp69cm1l7gf8bqb.apps.googleusercontent.com'
-      // TODO: Implement ACS
+              // TODO: Implement ACS
               : '',
     ).signIn(); //todo must add the hostdomain for the clients
 

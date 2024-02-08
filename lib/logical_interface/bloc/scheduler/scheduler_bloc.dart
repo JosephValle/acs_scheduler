@@ -1,7 +1,7 @@
 import 'package:adams_county_scheduler/network_interface/repositories/scheduler/schedule_repository.dart';
 import 'package:adams_county_scheduler/objects/report.dart';
 import 'package:bloc/bloc.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../../network_interface/api_clients/scheduler_api_client.dart';
 import '../../../objects/time_session.dart';
@@ -28,7 +28,7 @@ class SchedulerBloc extends Bloc<SchedulerEvent, SchedulerState> {
       } catch (e) {
         debugPrint('Error Getting Scheduler: $e');
         if (e is Error) {
-          print(e.stackTrace);
+          debugPrint('${e.stackTrace}');
         }
         emit(SchedulerError(error: e.toString()));
       }
@@ -43,7 +43,7 @@ class SchedulerBloc extends Bloc<SchedulerEvent, SchedulerState> {
       } catch (e) {
         debugPrint('Error Generating Schedule: $e');
         if (e is Error) {
-          print(e.stackTrace);
+          debugPrint('${e.stackTrace}');
         }
         emit(SchedulerError(error: e.toString()));
       }

@@ -31,7 +31,7 @@ import 'logical_interface/bloc/auth/auth_bloc.dart';
 import 'network_interface/repositories/auth/auth_repository.dart';
 
 void main() async {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
 
   await Hive.initFlutter('cache');
 

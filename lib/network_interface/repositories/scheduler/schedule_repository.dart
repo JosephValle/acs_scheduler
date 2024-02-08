@@ -210,13 +210,7 @@ class ScheduleRepository extends BaseScheduleRepository {
 
       return a.student.firstName.compareTo(b.student.firstName);
     });
-    int sum = 0;
-    for (var schedule in studentSchedules) {
-      for (var session in schedule.sessions) {
-        sum += 1;
-      }
-    }
-    print('Total Sessions: $sum');
+
   }
 
   void _finalAssignment() {
