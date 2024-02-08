@@ -89,15 +89,15 @@ class SchedulerApiClient {
 
       // Iterate over the schedules and fill the data
       for (var career in careers) {
-        List<String> row = [
-          career.excelId.toString(),
+        List<dynamic> row = [
+          career.excelId,
           career.career,
           career.room,
         ];
 
         // Assuming there are always 3 sessions
         for (int session in career.sessionCounts) {
-          row.add(session.toString());
+          row.add(session);
         }
 
         sheetObject.appendRow(row);

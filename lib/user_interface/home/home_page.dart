@@ -8,7 +8,6 @@ import 'package:adams_county_scheduler/utilities/navigation_items/navigation_ite
 import 'package:collapsible_sidebar/collapsible_sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 import '../../utilities/routes/routes.dart';
 
@@ -26,7 +25,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   void initState() {
-    FlutterNativeSplash.remove();
     context.read<SchoolsBloc>().add(LoadSchools());
     context.read<CareersBloc>().add(LoadCareers());
     context.read<StudentsBloc>().add(LoadStudents());

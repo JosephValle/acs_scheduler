@@ -5,7 +5,6 @@ import 'package:adams_county_scheduler/utilities/colors/ac_colors.dart';
 import 'package:adams_county_scheduler/utilities/theme/colored_container_text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 import '../../utilities/routes/routes.dart';
 
@@ -17,7 +16,6 @@ class SignInPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    FlutterNativeSplash.remove();
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is SignInSuccess) {

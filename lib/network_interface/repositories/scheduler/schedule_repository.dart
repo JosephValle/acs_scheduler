@@ -106,12 +106,14 @@ class ScheduleRepository extends BaseScheduleRepository {
         List<List<Student>> students = [[], [], []];
         sessions
             .sort((a, b) => a.timeSession.time.compareTo(b.timeSession.time));
-        // TODO: Make them Correspond
-        for (int i = 0; i < sessions.length; i += 1) {
-          final ClassSession session = sessions[i];
-          counts[i] = session.students.length;
-          for (int j = 0; j < session.students.length; j++) {
-            students[i].add(session.students[j]);
+        for (int i = 0; i < timeSessions.length; i += 1) {
+          final TimeSession timeSession = timeSessions[i];
+          for (int j = 0; j < sessions.length; j++) {
+            final ClassSession classSession = sessions[j];
+            if (timeSession.time == classSession.timeSession.time) {
+              counts[i] = classSession.students.length;
+              students[i].addAll(classSession.students);
+            }
           }
         }
         exportCareerSchedule.add(
@@ -208,6 +210,13 @@ class ScheduleRepository extends BaseScheduleRepository {
 
       return a.student.firstName.compareTo(b.student.firstName);
     });
+    int sum = 0;
+    for (var schedule in studentSchedules) {
+      for (var session in schedule.sessions) {
+        sum += 1;
+      }
+    }
+    print("Total Sessions: $sum");
   }
 
   void _finalAssignment() {
