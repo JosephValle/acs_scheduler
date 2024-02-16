@@ -25,7 +25,7 @@ class _CareerPriorityBuilderState extends State<CareerPriorityBuilder> {
   void initState() {
     super.initState();
     if (widget.careerPriority.firstChoice != -1) {
-      // TODO: Finish implemented 
+      // TODO: Finish implemented
     }
   }
 

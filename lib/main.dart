@@ -52,12 +52,6 @@ void main() async {
     return true;
   };
 
-  // AuthDatabase authDatabase = await AuthDatabase
-  //     .init(); //todo this will be used for initial user load if the user isn't null from Firebase
-
-  // SharedPreferences prefs = await SharedPreferences
-  //     .getInstance(); //todo store and read basic values like a tutorial
-
   User? user = FirebaseAuth.instance.currentUser;
 
   runApp(

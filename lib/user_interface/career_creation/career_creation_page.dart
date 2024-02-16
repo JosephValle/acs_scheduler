@@ -212,7 +212,6 @@ class _CareerCreationPageState extends State<CareerCreationPage> {
                                 speakers: speakers,
                                 excelNum: excelNum,
                                 room: _roomController.text.trim(),
-                                // TODO: Both are Ints
                                 maxClassSize: maxClassSize,
                                 minClassSize: minClassSize,
                               ),

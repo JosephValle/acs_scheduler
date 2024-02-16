@@ -56,7 +56,6 @@ List<CollapsibleItem> getNavigationItems(
       },
     ),
 
-    //state.currentUser?.isAdmin ?? false ? CollapsibleItem(text: "", onPressed: (){}), todo admin options
   ];
 
   if (currentUser?.isAdmin ?? false) {
