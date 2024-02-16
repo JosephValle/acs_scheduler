@@ -3,7 +3,6 @@ import 'package:adams_county_scheduler/logical_interface/bloc/schools/schools_bl
 import 'package:adams_county_scheduler/logical_interface/bloc/students/students_bloc.dart';
 import 'package:adams_county_scheduler/objects/career_priority.dart';
 import 'package:adams_county_scheduler/objects/school.dart';
-import 'package:adams_county_scheduler/user_interface/student_creation/widgets/career_prority_builder.dart';
 import 'package:adams_county_scheduler/user_interface/student_creation/widgets/school_selector.dart';
 import 'package:adams_county_scheduler/user_interface/widgets/colored_container.dart';
 import 'package:adams_county_scheduler/user_interface/widgets/input_field.dart';
@@ -35,17 +34,30 @@ class _StudentCreationPageState extends State<StudentCreationPage> {
     thirdChoice: -1,
   );
 
+  final List<TextEditingController> controllers = [
+    TextEditingController(),
+    TextEditingController(),
+    TextEditingController(),
+    TextEditingController(),
+    TextEditingController(),
+  ];
+
   late School school;
 
   @override
   void initState() {
     school = context.read<SchoolsBloc>().schools.first;
     Student? student = widget.student;
-    if (student !=null) {
+    if (student != null) {
       _firstNameController.text = student.firstName;
       _lastNameController.text = student.lastName;
       _firstNameController.text = student.firstName;
       priority = student.careerPriority;
+      controllers[0].text = student.careerPriority.firstChoice.toString();
+      controllers[1].text = student.careerPriority.secondChoice.toString();
+      controllers[2].text = student.careerPriority.thirdChoice.toString();
+      controllers[3].text = student.careerPriority.fourthChoice.toString();
+      controllers[4].text = student.careerPriority.fifthChoice.toString();
     }
     super.initState();
   }
@@ -62,7 +74,6 @@ class _StudentCreationPageState extends State<StudentCreationPage> {
                 ),
               );
           Navigator.of(context).pop();
-
         }
       },
       child: Scaffold(
@@ -134,12 +145,30 @@ class _StudentCreationPageState extends State<StudentCreationPage> {
                   ),
                 ),
               ),
-              CareerPriorityBuilder(
-                onChanged: (newPriority) {
-                  setState(() {
-                    priority = newPriority;
-                  });
-                }, careerPriority: priority,
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: 5,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: InputField(
+                      onChanged: (value) {
+                        setState(() {
+                          priority = CareerPriority(
+                            firstChoice: int.parse(controllers[0].text.trim()),
+                            secondChoice: int.parse(controllers[1].text.trim()),
+                            thirdChoice: int.parse(controllers[2].text.trim()),
+                            fourthChoice: int.parse(controllers[3].text.trim()),
+                            fifthChoice: int.parse(controllers[4].text.trim()),
+                          );
+                        });
+                      },
+                      hintText: '1, 2, 3, 4',
+                      controller: controllers[index],
+                    ),
+                  );
+                },
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -148,7 +177,8 @@ class _StudentCreationPageState extends State<StudentCreationPage> {
                   child: ColoredContainer(
                     onTap: () {
                       context.read<StudentsBloc>().add(
-                            CreateStudent(
+                            EditStudent(
+                              id: widget.student!.id,
                               priority: priority,
                               firstName: _firstNameController.text.trim(),
                               lastName: _lastNameController.text.trim(),
@@ -162,7 +192,7 @@ class _StudentCreationPageState extends State<StudentCreationPage> {
                     },
                     backgroundColor: ACColors.secondaryColor,
                     child: Text(
-                      'Create Student',
+                      '${widget.student != null ? 'Edit' : 'Create'} Student',
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.onBackground,
                       ),

@@ -7,13 +7,14 @@ class StudentsRepository implements BaseStudentsRepository {
   final StudentApiClient _studentsApiClient = StudentApiClient();
 
   @override
-  Future<Student> createStudent(
-      {required String firstName,
-      required String lastName,
-      required CareerPriority careerPriority,
-      required String school,
-      required String schoolId,
-      required int grade,}) async {
+  Future<Student> createStudent({
+    required String firstName,
+    required String lastName,
+    required CareerPriority careerPriority,
+    required String school,
+    required String schoolId,
+    required int grade,
+  }) async {
     return await _studentsApiClient.createStudent(
       firstName: firstName,
       lastName: lastName,
@@ -45,5 +46,24 @@ class StudentsRepository implements BaseStudentsRepository {
 
   Future<void> clearAllStudents() async {
     return await _studentsApiClient.clearAllStudents();
+  }
+
+  Future<Student> editStudent(
+      {required String id, required String firstName,
+      required String lastName,
+      required CareerPriority careerPriority,
+      required String school,
+      required String schoolId,
+      required int grade,}) async {
+
+    return await _studentsApiClient.editStudent(
+      id: id,
+      firstName: firstName,
+      lastName: lastName,
+      careerPriority: careerPriority,
+      school: school,
+      schoolId: schoolId,
+      grade: grade,
+    );
   }
 }

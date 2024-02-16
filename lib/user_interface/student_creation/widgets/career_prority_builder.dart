@@ -6,7 +6,8 @@ class CareerPriorityBuilder extends StatefulWidget {
   final CareerPriority careerPriority;
   final Function(CareerPriority) onChanged;
 
-  const CareerPriorityBuilder({required this.careerPriority, super.key, required this.onChanged});
+  const CareerPriorityBuilder(
+      {required this.careerPriority, super.key, required this.onChanged,});
 
   @override
   State<CareerPriorityBuilder> createState() => _CareerPriorityBuilderState();

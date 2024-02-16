@@ -110,4 +110,36 @@ class StudentApiClient {
       rethrow;
     }
   }
+
+  Future<Student> editStudent({
+    required String id,
+    required String firstName,
+    required String lastName,
+    required CareerPriority careerPriority,
+    required String school,
+    required String schoolId,
+    required int grade,
+  }) async {
+    DocumentReference ref = _firestore.collection(studentsCollection).doc(id);
+
+    // Update the document with new values
+    await ref.update({
+      'firstName': firstName,
+      'lastName': lastName,
+      'careerPriority': careerPriority.toJson(),
+      'school': school,
+      'schoolId': schoolId,
+      'grade': grade,
+    });
+
+    return Student(
+      id: id,
+      school: school,
+      firstName: firstName,
+      lastName: lastName,
+      careerPriority: careerPriority,
+      grade: grade,
+      schoolId: schoolId,
+    );
+  }
 }

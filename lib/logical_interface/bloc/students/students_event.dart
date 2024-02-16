@@ -5,7 +5,8 @@ abstract class StudentsEvent {}
 
 class LoadStudents extends StudentsEvent {}
 
-class CreateStudent extends StudentsEvent {
+class EditStudent extends StudentsEvent {
+  final String id;
   final String firstName;
   final String lastName;
   final int grade;
@@ -13,7 +14,8 @@ class CreateStudent extends StudentsEvent {
   final String schoolName;
   final CareerPriority priority;
 
-  CreateStudent({
+  EditStudent({
+    required this.id,
     required this.priority,
     required this.firstName,
     required this.lastName,
@@ -36,6 +38,4 @@ class BulkUploadStudents extends StudentsEvent {
   BulkUploadStudents({required this.sheet});
 }
 
-class ClearAllStudents extends StudentsEvent {
-
-}
+class ClearAllStudents extends StudentsEvent {}
