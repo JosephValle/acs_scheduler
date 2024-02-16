@@ -67,12 +67,6 @@ class _StudentCreationPageState extends State<StudentCreationPage> {
     return BlocListener<StudentsBloc, StudentsState>(
       listener: (context, state) {
         if (state is StudentCreated) {
-          context.read<SchoolDetailBloc>().add(
-                AddStudent(
-                  student: state.student,
-                  schoolId: state.student.schoolId,
-                ),
-              );
           Navigator.of(context).pop();
         }
       },
@@ -182,11 +176,11 @@ class _StudentCreationPageState extends State<StudentCreationPage> {
                               priority: priority,
                               firstName: _firstNameController.text.trim(),
                               lastName: _lastNameController.text.trim(),
-                              schoolName: school.shortName,
+                              schoolName: widget.student!.school,
                               grade:
                                   int.tryParse(_gradeController.text.trim()) ??
                                       -1,
-                              schoolId: school.id,
+                              schoolId: widget.student!.schoolId,
                             ),
                           );
                     },

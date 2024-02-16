@@ -137,7 +137,7 @@ class StudentsBloc extends Bloc<StudentsEvent, StudentsState> {
           .compareTo(('${b.lastName}, ${b.firstName}')),
     );
 
-    emit(StudentCreated(student: student, students: students));
+    emit(StudentCreated( students: students));
   }
 
   void _clearAllStudents(ClearAllStudents event, emit) async {

@@ -16,9 +16,7 @@ class StudentsLoaded extends StudentsState {
 }
 
 class StudentCreated extends StudentsState {
-  final Student student;
-
-  const StudentCreated({required this.student, required super.students});
+  const StudentCreated({required super.students});
 }
 
 class UploadFinished extends StudentsState {
