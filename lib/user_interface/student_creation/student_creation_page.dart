@@ -1,4 +1,3 @@
-import 'package:adams_county_scheduler/logical_interface/bloc/school_detail/school_detail_bloc.dart';
 import 'package:adams_county_scheduler/logical_interface/bloc/schools/schools_bloc.dart';
 import 'package:adams_county_scheduler/logical_interface/bloc/students/students_bloc.dart';
 import 'package:adams_county_scheduler/objects/career_priority.dart';

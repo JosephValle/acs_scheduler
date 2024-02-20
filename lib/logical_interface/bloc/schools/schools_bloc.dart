@@ -21,6 +21,7 @@ class SchoolsBloc extends Bloc<SchoolsEvent, SchoolsState> {
     on<UploadSchool>(_mapUploadSchoolToState);
     on<UploadProgressUpdated>(_mapUploadProgressUpdatedToState);
     on<LoadSchools>(_mapLoadSchoolsToState);
+    on<DeleteSchool>(_deleteSchool);
   }
 
   void _mapLoadSchoolsToState(LoadSchools event, emit) async {
@@ -83,5 +84,11 @@ class SchoolsBloc extends Bloc<SchoolsEvent, SchoolsState> {
 
     schools.add(newSchool);
     emit(SchoolCreated(schools: schools));
+  }
+
+  void _deleteSchool(DeleteSchool event, emit) async {
+    // TODO: ACTUALLY DELETE IT
+    schools.removeWhere((element) => element.id == event.school.id);
+    emit(SchoolsLoaded(schools: schools));
   }
 }

@@ -1,20 +1,20 @@
 import 'package:adams_county_scheduler/network_interface/api_clients/careers_api_client.dart';
-import 'package:adams_county_scheduler/network_interface/api_clients/schools_api_client.dart';
 import 'package:adams_county_scheduler/network_interface/api_clients/students_api_client.dart';
 import 'package:adams_county_scheduler/network_interface/repositories/scheduler/base_schedule_repository.dart';
 import 'package:adams_county_scheduler/objects/class_session.dart';
 import 'package:adams_county_scheduler/objects/export_careers_schedule.dart';
 import 'package:adams_county_scheduler/objects/export_student_schedule.dart';
-import 'package:adams_county_scheduler/objects/school.dart';
 import 'package:adams_county_scheduler/objects/student_schedule.dart';
 import 'package:adams_county_scheduler/utilities/functions/format_timestamp.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:uuid/uuid.dart';
 import '../../../objects/career.dart';
+import '../../../objects/school.dart';
 import '../../../objects/student.dart';
 import '../../../objects/time_session.dart';
 import '../../api_clients/scheduler_api_client.dart';
+import '../../api_clients/schools_api_client.dart';
 
 class ScheduleRepository extends BaseScheduleRepository {
   final SchedulerApiClient _schedulerApiClient = SchedulerApiClient();
@@ -22,7 +22,6 @@ class ScheduleRepository extends BaseScheduleRepository {
   final Stopwatch stopwatch = Stopwatch();
   List<ClassSession> classes = [];
   List<StudentSchedule> studentSchedules = [];
-
   @override
   Future<void> generateSchedule(bool isAm) async {
     debugPrint('Start');
@@ -35,10 +34,7 @@ class ScheduleRepository extends BaseScheduleRepository {
       'Done downloading careers: ${stopwatch.elapsedMilliseconds} ms in',
     );
     final List<School> schools = await _getAllSchools();
-    for (var school in schools) {
-      print(school.shortName);
-      print(school.time);
-    }
+
     // Student objects have a field 'school' that corresponds to a school shortName
 // Create a map of school shortName to School object for efficient lookup
     final Map<String, School> schoolMap = {
@@ -91,8 +87,7 @@ class ScheduleRepository extends BaseScheduleRepository {
 
   Future<void> _createInFirebase({
     required List<Career> careers,
-    required List<TimeSession> timeSessions,
-    required String time,
+    required List<TimeSession> timeSessions, required String time,
   }) async {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
     try {
@@ -131,12 +126,14 @@ class ScheduleRepository extends BaseScheduleRepository {
         List<List<Student>> students = [[], [], []];
         sessions
             .sort((a, b) => a.timeSession.time.compareTo(b.timeSession.time));
-        // TODO: Make them Correspond
-        for (int i = 0; i < sessions.length; i += 1) {
-          final ClassSession session = sessions[i];
-          counts[i] = session.students.length;
-          for (int j = 0; j < session.students.length; j++) {
-            students[i].add(session.students[j]);
+        for (int i = 0; i < timeSessions.length; i += 1) {
+          final TimeSession timeSession = timeSessions[i];
+          for (int j = 0; j < sessions.length; j++) {
+            final ClassSession classSession = sessions[j];
+            if (timeSession.time == classSession.timeSession.time) {
+              counts[i] = classSession.students.length;
+              students[i].addAll(classSession.students);
+            }
           }
         }
         exportCareerSchedule.add(
@@ -184,26 +181,23 @@ class ScheduleRepository extends BaseScheduleRepository {
       stopwatch.stop();
 
       await _schedulerApiClient.createMasterList(
-        schedules: exportStudentSchedule,
-        time: time,
-      );
+        schedules: exportStudentSchedule, time: time,);
       await _schedulerApiClient.createStudentSchedule(
-        schedules: exportStudentSchedule,
-        time: time,
-      );
+        schedules: exportStudentSchedule, time: time,);
       await _schedulerApiClient.createAttendanceSchedule(
         careerSessions: exportCareerSchedule,
-        times: timeSessions,
-        time: time,
+        times: timeSessions, time: time,
       );
       await _schedulerApiClient.createCareerCounts(
-        careers: exportCareerSchedule,
-        time: time,
-      );
+        careers: exportCareerSchedule, time: time,);
     } catch (e) {
       debugPrint('Error with firebase: $e');
     }
   }
+
+
+  Future<List<School>> _getAllSchools() async =>
+      await SchoolsApiClient().loadSchools();
 
   Future<void> _deleteCollection(CollectionReference collection) async {
     const int batchSize = 500;
@@ -240,6 +234,7 @@ class ScheduleRepository extends BaseScheduleRepository {
 
       return a.student.firstName.compareTo(b.student.firstName);
     });
+
   }
 
   void _finalAssignment() {
@@ -333,9 +328,12 @@ class ScheduleRepository extends BaseScheduleRepository {
       );
       for (int i = 0; i < 5; i++) {
         final int careerPriority = getCareerId(index: i, student: student);
-        if (careerPriority <= 0) continue;
+        if (careerPriority <= 0) {
+          continue;
+        }
         final Career career =
         careers.firstWhere((element) => element.excelNum == careerPriority);
+
         final List<ClassSession> correspondingClasses =
         classes.where((element) => element.career.id == career.id).toList();
         for (ClassSession correspondingClass in correspondingClasses) {
@@ -375,9 +373,6 @@ class ScheduleRepository extends BaseScheduleRepository {
 
   Future<List<Career>> _getAllCareers() async =>
       await CareersApiClient().loadCareers();
-
-  Future<List<School>> _getAllSchools() async =>
-      await SchoolsApiClient().loadSchools();
 
   Future<List<Student>> _getAllStudents() async =>
       await StudentApiClient().getStudents();

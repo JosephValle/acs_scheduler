@@ -3,11 +3,8 @@ part of 'students_bloc.dart';
 @immutable
 abstract class StudentsEvent {}
 
-class LoadStudents extends StudentsEvent {}
-
-class ResetBulkUpload extends StudentsEvent{}
-
-class CreateStudent extends StudentsEvent {
+class EditStudent extends StudentsEvent {
+  final String id;
   final String firstName;
   final String lastName;
   final int grade;
@@ -15,7 +12,8 @@ class CreateStudent extends StudentsEvent {
   final String schoolName;
   final CareerPriority priority;
 
-  CreateStudent({
+  EditStudent({
+    required this.id,
     required this.priority,
     required this.firstName,
     required this.lastName,
@@ -24,6 +22,11 @@ class CreateStudent extends StudentsEvent {
     required this.schoolId,
   });
 }
+
+
+class LoadStudents extends StudentsEvent {}
+
+class ResetBulkUpload extends StudentsEvent{}
 
 class SortStudents extends StudentsEvent {
   final bool ascending;

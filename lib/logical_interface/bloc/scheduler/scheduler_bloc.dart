@@ -41,7 +41,7 @@ class SchedulerBloc extends Bloc<SchedulerEvent, SchedulerState> {
       } catch (e) {
         debugPrint('Error Getting Scheduler: $e');
         if (e is Error && kDebugMode) {
-          print(e.stackTrace);
+          debugPrint('${e.stackTrace}');
         }
         emit(SchedulerError(error: e.toString()));
       }
