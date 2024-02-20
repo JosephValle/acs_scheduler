@@ -29,8 +29,9 @@ class StudentsBloc extends Bloc<StudentsEvent, StudentsState> {
   StudentsBloc({required StudentsRepository studentsRepository})
       : _studentsRepository = studentsRepository,
         super(const StudentsInitial(students: [])) {
-    on<EditStudent>(_mapCreateStudentToState);
+    on<CreateStudent>(_mapCreateStudentToState);
     on<LoadStudents>(_mapLostStudentsToState);
+    on<ResetBulkUpload>(_resetBulkUpload);
     on<SortStudents>(_mapSortStudentsToState);
     on<BulkUploadStudents>(_mapBulkUploadStudentsToState);
     on<ClearAllStudents>(_clearAllStudents);
@@ -102,7 +103,7 @@ class StudentsBloc extends Bloc<StudentsEvent, StudentsState> {
     }
 
     students.sort(
-      (a, b) => ('${a.lastName}, ${a.firstName}')
+          (a, b) => ('${a.lastName}, ${a.firstName}')
           .compareTo(('${b.lastName}, ${b.firstName}')),
     );
     emit(UploadFinished(errors: errors, students: students));
@@ -112,16 +113,15 @@ class StudentsBloc extends Bloc<StudentsEvent, StudentsState> {
     students = await _studentsRepository.getStudents();
 
     students.sort(
-      (a, b) => ('${a.lastName}, ${a.firstName}')
+          (a, b) => ('${a.lastName}, ${a.firstName}')
           .compareTo(('${b.lastName}, ${b.firstName}')),
     );
 
     emit(StudentsLoaded(students: students));
   }
 
-  void _mapCreateStudentToState(EditStudent event, emit) async {
-    Student student = await _studentsRepository.editStudent(
-      id: event.id,
+  void _mapCreateStudentToState(CreateStudent event, emit) async {
+    Student student = await _studentsRepository.createStudent(
       firstName: event.firstName,
       lastName: event.lastName,
       careerPriority: event.priority,
@@ -129,21 +129,25 @@ class StudentsBloc extends Bloc<StudentsEvent, StudentsState> {
       schoolId: event.schoolId,
       grade: event.grade,
     );
-    students.removeWhere((element) => element.id == event.id);
-    students.insert(0, student);
+
+    students.add(student);
 
     students.sort(
-      (a, b) => ('${a.lastName}, ${a.firstName}')
+          (a, b) => ('${a.lastName}, ${a.firstName}')
           .compareTo(('${b.lastName}, ${b.firstName}')),
     );
 
-    emit(StudentCreated( students: students));
+    emit(StudentCreated(student: student, students: students));
   }
 
   void _clearAllStudents(ClearAllStudents event, emit) async {
+
     await _studentsRepository.clearAllStudents();
 
     students = [];
+    emit(StudentsLoaded(students: students));
+  }
+  void _resetBulkUpload (ResetBulkUpload event, emit) {
     emit(StudentsLoaded(students: students));
   }
 
@@ -155,89 +159,78 @@ class StudentsBloc extends Bloc<StudentsEvent, StudentsState> {
               ? students.sort((a, b) => a.firstName.compareTo(b.firstName))
               : students.sort((b, a) => a.firstName.compareTo(b.firstName));
         }
-        break;
       case 1:
         {
           event.ascending
               ? students.sort((a, b) => a.lastName.compareTo(b.lastName))
               : students.sort((b, a) => a.lastName.compareTo(b.lastName));
         }
-        break;
       case 2:
         {
           event.ascending
               ? students.sort((a, b) => a.school.compareTo(b.school))
               : students.sort((b, a) => a.school.compareTo(b.school));
         }
-        break;
       case 3:
         {
           event.ascending
               ? students.sort(
-                  (a, b) => a.careerPriority.firstChoice
-                      .compareTo(b.careerPriority.firstChoice),
-                )
+                (a, b) => a.careerPriority.firstChoice
+                .compareTo(b.careerPriority.firstChoice),
+          )
               : students.sort(
-                  (b, a) => a.careerPriority.firstChoice
-                      .compareTo(b.careerPriority.firstChoice),
-                );
+                (b, a) => a.careerPriority.firstChoice
+                .compareTo(b.careerPriority.firstChoice),
+          );
         }
-        break;
       case 4:
         {
           event.ascending
               ? students.sort(
-                  (a, b) => a.careerPriority.secondChoice
-                      .compareTo(b.careerPriority.secondChoice),
-                )
+                (a, b) => a.careerPriority.secondChoice
+                .compareTo(b.careerPriority.secondChoice),
+          )
               : students.sort(
-                  (b, a) => a.careerPriority.secondChoice
-                      .compareTo(b.careerPriority.secondChoice),
-                );
+                (b, a) => a.careerPriority.secondChoice
+                .compareTo(b.careerPriority.secondChoice),
+          );
         }
-        break;
-
       case 5:
         {
           event.ascending
               ? students.sort(
-                  (a, b) => a.careerPriority.thirdChoice
-                      .compareTo(b.careerPriority.thirdChoice),
-                )
+                (a, b) => a.careerPriority.thirdChoice
+                .compareTo(b.careerPriority.thirdChoice),
+          )
               : students.sort(
-                  (b, a) => a.careerPriority.thirdChoice
-                      .compareTo(b.careerPriority.thirdChoice),
-                );
+                (b, a) => a.careerPriority.thirdChoice
+                .compareTo(b.careerPriority.thirdChoice),
+          );
         }
-        break;
-
       case 6:
         {
           event.ascending
               ? students.sort(
-                  (a, b) => a.careerPriority.fourthChoice
-                      .compareTo(b.careerPriority.fourthChoice),
-                )
+                (a, b) => a.careerPriority.fourthChoice
+                .compareTo(b.careerPriority.fourthChoice),
+          )
               : students.sort(
-                  (b, a) => a.careerPriority.fourthChoice
-                      .compareTo(b.careerPriority.fourthChoice),
-                );
+                (b, a) => a.careerPriority.fourthChoice
+                .compareTo(b.careerPriority.fourthChoice),
+          );
         }
-        break;
-
       case 7:
         {
           event.ascending
               ? students.sort(
-                  (a, b) => a.careerPriority.fifthChoice
-                      .compareTo(b.careerPriority.fifthChoice),
-                )
+                (a, b) => a.careerPriority.fifthChoice
+                .compareTo(b.careerPriority.fifthChoice),
+          )
               : students.sort(
-                  (b, a) => a.careerPriority.fifthChoice
-                      .compareTo(b.careerPriority.fifthChoice),
-                );
+                (b, a) => a.careerPriority.fifthChoice
+                .compareTo(b.careerPriority.fifthChoice),
+          );
         }
-        break;
     }
 
     emit(StudentsLoaded(students: students));

@@ -41,6 +41,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage>
         .read<SchoolDetailBloc>()
         .add(LoadSchoolDetails(schoolId: widget.school.id));
 
+
     super.initState();
   }
 
@@ -48,18 +49,19 @@ class _SchoolDetailPageState extends State<SchoolDetailPage>
   Widget build(BuildContext context) {
     return BlocListener<CareersBloc, CareersState>(
       listenWhen: (oldState, newState) =>
-          (newState is CareerAddedToSchool &&
-              newState.schoolId == widget.school.id) ||
+      (newState is CareerAddedToSchool &&
+          newState.schoolId == widget.school.id) ||
           (newState is CareerRemovedFromSchool &&
               newState.schoolId == widget.school.id),
       listener: (context, state) {
+
         if (state is CareerRemovedFromSchool) {
           context.read<SchoolDetailBloc>().add(
-                RemoveCareer(
-                  careerId: state.careerId,
-                  schoolId: state.schoolId,
-                ),
-              );
+            RemoveCareer(
+              careerId: state.careerId,
+              schoolId: state.schoolId,
+            ),
+          );
         } else if (state is CareerAddedToSchool) {
           context
               .read<SchoolDetailBloc>()

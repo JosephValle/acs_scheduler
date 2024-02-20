@@ -12,12 +12,13 @@ class SchoolsRepository implements BaseSchoolsRepository {
   Future<School> createSchool({required String schoolName,
     required String schoolShortName,
     required String category,
-    required String? imageUrl,}) async {
+    required String? imageUrl, required String time,}) async {
     return await _schoolsApiClient.createSchool(
-        schoolName: schoolName,
-        shortSchoolName: schoolShortName,
-        imageUrl: imageUrl,
-        category: category,);
+      schoolName: schoolName,
+      shortSchoolName: schoolShortName,
+      time: time,
+      imageUrl: imageUrl,
+      category: category,);
   }
 
   @override
@@ -26,9 +27,9 @@ class SchoolsRepository implements BaseSchoolsRepository {
     required Function(String downloadLink) onFinished,
     required Function(double progress) onProgress,}) async {
     return await _schoolsApiClient.uploadSchoolImage(schoolShortName: schoolShortName,
-        image: image,
-        onProgress: onProgress,
-        onFinished: onFinished,);
+      image: image,
+      onProgress: onProgress,
+      onFinished: onFinished,);
   }
 
   @override

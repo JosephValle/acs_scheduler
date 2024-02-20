@@ -1,6 +1,5 @@
 import 'package:adams_county_scheduler/objects/school.dart';
 import 'package:adams_county_scheduler/user_interface/school_detail/school_detail_page.dart';
-import 'package:adams_county_scheduler/user_interface/schools/widgets/school_delete_dialog.dart';
 import 'package:adams_county_scheduler/user_interface/widgets/colored_container.dart';
 import 'package:adams_county_scheduler/utilities/colors/ac_colors.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -24,9 +23,9 @@ class SchoolTile extends StatelessWidget {
           onTap: () => header
               ? null
               : Navigator.of(context).pushNamed(
-                  Routes.schoolDetailPage,
-                  arguments: SchoolDetailPageArgs(school: school),
-                ),
+            Routes.schoolDetailPage,
+            arguments: SchoolDetailPageArgs(school: school),
+          ),
           height: MediaQuery.of(context).size.height / 3,
           childPadding: EdgeInsets.zero,
           backgroundColor: Theme.of(context).colorScheme.surface,
@@ -37,25 +36,25 @@ class SchoolTile extends StatelessWidget {
                   width: double.infinity,
                   child: ClipRRect(
                     borderRadius:
-                        header ? BorderRadius.zero : BorderRadius.circular(10),
+                    header ? BorderRadius.zero : BorderRadius.circular(10),
                     child: Stack(
                       children: [
                         school.imageUrl.isEmpty
                             ? Container(
-                                width: double.infinity,
-                                height: double.infinity,
-                                color: ACColors.secondaryColor,
-                              )
+                          width: double.infinity,
+                          height: double.infinity,
+                          color: ACColors.secondaryColor,
+                        )
                             : Container(
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: NetworkImage(
-                                      school.imageUrl,
-                                    ),
-                                  ),
-                                ),
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: NetworkImage(
+                                school.imageUrl,
                               ),
+                            ),
+                          ),
+                        ),
                         Container(
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
@@ -96,11 +95,11 @@ class SchoolTile extends StatelessWidget {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: AutoSizeText(
-                                school.name,
+                                '${school.name} - ${school.time}',
                                 maxLines: 2,
                                 style: TextStyle(
                                   fontSize:
-                                      MediaQuery.of(context).size.width / 30,
+                                  MediaQuery.of(context).size.width / 30,
                                 ),
                               ),
                             ),
@@ -109,48 +108,39 @@ class SchoolTile extends StatelessWidget {
                         header
                             ? Container()
                             : Align(
-                                alignment: Alignment.bottomCenter,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Expanded(
-                                        child: Align(
-                                          alignment: Alignment.bottomCenter,
-                                          child: RichText(
-                                            text: TextSpan(
-                                              text: 'Total Students:\t',
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w200,
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .onBackground,
-                                              ),
-                                              children: [
-                                                TextSpan(
-                                                  text: school.studentCount
-                                                      .toString(),
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                ),
-                                              ],
+                          alignment: Alignment.bottomCenter,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Expanded(
+                                  child: Align(
+                                    alignment: Alignment.bottomCenter,
+                                    child: RichText(
+                                      text: TextSpan(
+                                        text: 'Total Students:\t',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w200,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onBackground,
+                                        ),
+                                        children: [
+                                          TextSpan(
+                                            text: school.studentCount
+                                                .toString(),
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.w600,
                                             ),
                                           ),
-                                        ),
+                                        ],
                                       ),
-                                    ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                        Align(
-                          alignment: Alignment.bottomRight,
-                          child: IconButton(
-                            icon: const Icon(Icons.delete),
-                            onPressed: () =>
-                              showDialog(context: context, builder: (context) => SchoolDeleteDialog(school: school, ))
-                            ,
+                              ],
+                            ),
                           ),
                         ),
                       ],

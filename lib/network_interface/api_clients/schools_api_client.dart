@@ -16,6 +16,7 @@ class SchoolsApiClient {
     required String shortSchoolName,
     required String? imageUrl,
     required String category,
+    required String time,
   }) async {
     DocumentReference ref = await _firestore.collection(schoolsCollection).add({
       'name': schoolName,
@@ -25,6 +26,7 @@ class SchoolsApiClient {
       'studentCount': 0,
       'activeCareerCount': 0,
       'classroomCount': 0,
+      'time': time,
       'createdAt': DateTime.now(),
     });
 
@@ -39,7 +41,7 @@ class SchoolsApiClient {
       classroomCount: 0,
       shortName: shortSchoolName,
       studentCount: 0,
-    );
+      time: time,);
   }
 
   Future<void> uploadSchoolImage({
@@ -49,8 +51,8 @@ class SchoolsApiClient {
     required Function(String downloadUrl) onFinished,
   }) async {
     Reference ref = _storage.ref('$schoolsCollection/header_images/').child(
-          "${schoolShortName}_header_image.${image.mimeType!.split("/").last}",
-        );
+      "${schoolShortName}_header_image.${image.mimeType!.split("/").last}",
+    );
 
     UploadTask task = ref.putData(
       await image.readAsBytes(),

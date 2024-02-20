@@ -23,7 +23,7 @@ class SchedulerApiClient {
     required String session,
   }) async {
     DocumentReference ref =
-        await _firestore.collection(sessionsCollection).add({
+    await _firestore.collection(sessionsCollection).add({
       'time': Timestamp.fromDate(time),
       'session': session,
     });
@@ -50,9 +50,9 @@ class SchedulerApiClient {
     return querySnapshot.docs
         .map(
           (doc) => TimeSession.fromJson(
-            doc.data() as Map<String, dynamic>,
-          ),
-        ) // Assign the document ID to the TimeSession id field
+        doc.data() as Map<String, dynamic>,
+      ),
+    ) // Assign the document ID to the TimeSession id field
         .toList();
   }
 
@@ -70,6 +70,7 @@ class SchedulerApiClient {
 
   Future<String> createCareerCounts({
     required List<ExportCareerSchedule> careers,
+    required String time,
   }) async {
     try {
       var excel = Excel.createExcel(); // Create an Excel document
@@ -89,15 +90,15 @@ class SchedulerApiClient {
 
       // Iterate over the schedules and fill the data
       for (var career in careers) {
-        List<dynamic> row = [
-          career.excelId,
+        List<String> row = [
+          career.excelId.toString(),
           career.career,
           career.room,
         ];
 
         // Assuming there are always 3 sessions
         for (int session in career.sessionCounts) {
-          row.add(session);
+          row.add(session.toString());
         }
 
         sheetObject.appendRow(row);
@@ -105,7 +106,7 @@ class SchedulerApiClient {
 
       // Save the Excel file
       Uint8List fileBytes = Uint8List.fromList(excel.encode()!);
-      String fileName = 'Career Counts List.xlsx';
+      String fileName = 'Career Counts List - $time.xlsx';
 
       return await uploadFile(fileBytes, fileName);
     } catch (e) {
@@ -115,6 +116,7 @@ class SchedulerApiClient {
 
   Future<String> createMasterList({
     required List<ExportStudentSchedule> schedules,
+    required String time,
   }) async {
     var excel = Excel.createExcel(); // Create an Excel document
     Sheet sheetObject = excel['Sheet1']; // Accessing sheet
@@ -146,13 +148,14 @@ class SchedulerApiClient {
 
     // Save the Excel file
     Uint8List fileBytes = Uint8List.fromList(excel.encode()!);
-    String fileName = 'Master List.xlsx';
+    String fileName = 'Master List - $time.xlsx';
 
     return await uploadFile(fileBytes, fileName);
   }
 
   Future<String> createStudentSchedule({
     required List<ExportStudentSchedule> schedules,
+    required String time,
   }) async {
     try {
       final ByteData data = await rootBundle
@@ -183,7 +186,7 @@ class SchedulerApiClient {
       }
       c.add(ListContent('plainlist', plainContents));
       final Uint8List d = Uint8List.fromList((await docx.generate(c))!);
-      const String fileName = 'Student Schedules.docx';
+      final String fileName = 'Student Schedules - $time.docx';
       return await uploadFile(d, fileName);
     } catch (e) {
       rethrow;
@@ -193,6 +196,7 @@ class SchedulerApiClient {
   Future<String> createAttendanceSchedule({
     required List<ExportCareerSchedule> careerSessions,
     required List<TimeSession> times,
+    required String time,
   }) async {
     try {
       final ByteData data = await rootBundle
@@ -209,7 +213,7 @@ class SchedulerApiClient {
           if (students.isEmpty) continue;
           final TimeSession time = times[i];
           students.sort(
-            (a, b) => '${a.lastName}, ${a.firstName}'
+                (a, b) => '${a.lastName}, ${a.firstName}'
                 .compareTo('${b.lastName}, ${b.firstName}'),
           );
           List<RowContent> rows = [];
@@ -251,7 +255,7 @@ class SchedulerApiClient {
       }
       c.add(ListContent('plainlist', plainContents));
       final Uint8List d = Uint8List.fromList((await docx.generate(c))!);
-      const String fileName = 'Career Attendance.docx';
+      final String fileName = 'Career Attendance - $time.docx';
       return await uploadFile(d, fileName);
     } catch (e) {
       rethrow;

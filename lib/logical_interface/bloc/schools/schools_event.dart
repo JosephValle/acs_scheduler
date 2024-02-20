@@ -3,19 +3,12 @@ part of 'schools_bloc.dart';
 @immutable
 abstract class SchoolsEvent {}
 
-class DeleteSchool extends SchoolsEvent {
-  final School school;
-
-  DeleteSchool({
-    required this.school,
-  });
-}
-
 class CreateSchool extends SchoolsEvent {
   final String schoolName;
   final String schoolShortName;
   final XFile? image;
   final String category;
+  final String time;
 
   ///This event creates a new school and updates the UI accordingly
   ///[schoolName] is the full name of the school
@@ -23,6 +16,7 @@ class CreateSchool extends SchoolsEvent {
   ///[category] is the classification of the school
   ///[image] is the optional header image
   CreateSchool({
+    required this.time,
     required this.schoolShortName,
     required this.schoolName,
     required this.category,
@@ -35,6 +29,7 @@ class UploadSchool extends SchoolsEvent {
   final String schoolShortName;
   final String? imageUrl;
   final String category;
+  final String time;
 
   ///This event actually uploads the school and emits the events
   ///[schoolName] is the full name of the school
@@ -42,6 +37,7 @@ class UploadSchool extends SchoolsEvent {
   ///[category] is the classification of the school
   ///[imageUrl] is the optional header image url
   UploadSchool({
+    required this.time,
     required this.imageUrl,
     required this.schoolShortName,
     required this.schoolName,

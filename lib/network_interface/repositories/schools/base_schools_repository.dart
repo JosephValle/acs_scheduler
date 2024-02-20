@@ -19,6 +19,7 @@ abstract class BaseSchoolsRepository {
     required String schoolShortName,
     required String category,
     required String? imageUrl,
+    required String time,
   });
 
 
@@ -30,9 +31,9 @@ abstract class BaseSchoolsRepository {
   /// [onProgress] provides a percentage upload progress double
   Future<void> uploadSchoolImage(
       {required String schoolShortName,
-      required XFile image,
-      required Function(String downloadLink) onFinished,
-      required Function(double progress) onProgress,});
+        required XFile image,
+        required Function(String downloadLink) onFinished,
+        required Function(double progress) onProgress,});
 
   ///Load all available schools
   Future<List<School>> loadSchools();

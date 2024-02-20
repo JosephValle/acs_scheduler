@@ -21,7 +21,6 @@ class SchoolsBloc extends Bloc<SchoolsEvent, SchoolsState> {
     on<UploadSchool>(_mapUploadSchoolToState);
     on<UploadProgressUpdated>(_mapUploadProgressUpdatedToState);
     on<LoadSchools>(_mapLoadSchoolsToState);
-    on<DeleteSchool>(_deleteSchool);
   }
 
   void _mapLoadSchoolsToState(LoadSchools event, emit) async {
@@ -38,6 +37,7 @@ class SchoolsBloc extends Bloc<SchoolsEvent, SchoolsState> {
         onFinished: (String url) async {
           add(
             UploadSchool(
+              time: event.time,
               imageUrl: url,
               schoolShortName: event.schoolShortName,
               schoolName: event.schoolName,
@@ -53,6 +53,7 @@ class SchoolsBloc extends Bloc<SchoolsEvent, SchoolsState> {
     } else {
       add(
         UploadSchool(
+          time: event.time,
           imageUrl: null,
           schoolShortName: event.schoolShortName,
           schoolName: event.schoolName,
@@ -63,9 +64,9 @@ class SchoolsBloc extends Bloc<SchoolsEvent, SchoolsState> {
   }
 
   void _mapUploadProgressUpdatedToState(
-    UploadProgressUpdated event,
-    emit,
-  ) async {
+      UploadProgressUpdated event,
+      emit,
+      ) async {
     emit(
       ImageUploadProgressUpdated(schools: schools, progress: event.progress),
     );
@@ -77,14 +78,10 @@ class SchoolsBloc extends Bloc<SchoolsEvent, SchoolsState> {
       schoolShortName: event.schoolShortName,
       category: event.category,
       imageUrl: event.imageUrl,
+      time: event.time,
     );
 
     schools.add(newSchool);
     emit(SchoolCreated(schools: schools));
-  }
-
-  void _deleteSchool(DeleteSchool event, emit) async {
-    schools.removeWhere((element) => element.id == event.school.id);
-    emit(SchoolsLoaded(schools: schools));
   }
 }

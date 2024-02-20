@@ -1,9 +1,11 @@
 import 'package:adams_county_scheduler/network_interface/api_clients/careers_api_client.dart';
+import 'package:adams_county_scheduler/network_interface/api_clients/schools_api_client.dart';
 import 'package:adams_county_scheduler/network_interface/api_clients/students_api_client.dart';
 import 'package:adams_county_scheduler/network_interface/repositories/scheduler/base_schedule_repository.dart';
 import 'package:adams_county_scheduler/objects/class_session.dart';
 import 'package:adams_county_scheduler/objects/export_careers_schedule.dart';
 import 'package:adams_county_scheduler/objects/export_student_schedule.dart';
+import 'package:adams_county_scheduler/objects/school.dart';
 import 'package:adams_county_scheduler/objects/student_schedule.dart';
 import 'package:adams_county_scheduler/utilities/functions/format_timestamp.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -26,17 +28,38 @@ class ScheduleRepository extends BaseScheduleRepository {
     debugPrint('Start');
     stopwatch.reset();
     stopwatch.start();
+    final String time = isAm ? 'AM' : 'PM';
+
     final List<Career> careers = await _getAllCareers();
     debugPrint(
       'Done downloading careers: ${stopwatch.elapsedMilliseconds} ms in',
     );
+    final List<School> schools = await _getAllSchools();
+    for (var school in schools) {
+      print(school.shortName);
+      print(school.time);
+    }
+    // Student objects have a field 'school' that corresponds to a school shortName
+// Create a map of school shortName to School object for efficient lookup
+    final Map<String, School> schoolMap = {
+      for (var school in schools) school.shortName: school,
+    };
 
-    final List<Student> students = await _getAllStudents();
+    final List<Student> unfiltered = await _getAllStudents();
+// Filter students where their school's time matches the `time` variable
+    final List<Student> students = unfiltered.where((student) {
+      // Use the student's school field to get the corresponding School object from the map
+      final School? studentSchool = schoolMap[student.school];
+      // Check if the school's time matches the specified time
+      return studentSchool?.time == time;
+    }).toList();
     debugPrint(
       'Done downloading students: ${stopwatch.elapsedMilliseconds} ms in',
     );
 
-    final List<TimeSession> sessions = await _getAllSessions(isAm);
+    final List<TimeSession> sessions = (await _getAllSessions(isAm))
+        .where((element) => element.session.contains(time))
+        .toList();
     debugPrint(
       'Done downloading sessions: ${stopwatch.elapsedMilliseconds} ms in',
     );
@@ -62,12 +85,14 @@ class ScheduleRepository extends BaseScheduleRepository {
     await _createInFirebase(
       careers: careers,
       timeSessions: sessions,
+      time: time,
     );
   }
 
   Future<void> _createInFirebase({
     required List<Career> careers,
     required List<TimeSession> timeSessions,
+    required String time,
   }) async {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
     try {
@@ -86,7 +111,7 @@ class ScheduleRepository extends BaseScheduleRepository {
         exportStudentSchedule.add(
           ExportStudentSchedule(
             formattedName:
-                '${schedule.student.lastName}, ${schedule.student.firstName}',
+            '${schedule.student.lastName}, ${schedule.student.firstName}',
             school: schedule.student.school,
             sessions: exportStudentSessions,
           ),
@@ -101,19 +126,17 @@ class ScheduleRepository extends BaseScheduleRepository {
       List<ExportCareerSchedule> exportCareerSchedule = [];
       for (Career career in careers) {
         List<ClassSession> sessions =
-            classes.where((element) => element.career.id == career.id).toList();
+        classes.where((element) => element.career.id == career.id).toList();
         List<int> counts = [0, 0, 0];
         List<List<Student>> students = [[], [], []];
         sessions
             .sort((a, b) => a.timeSession.time.compareTo(b.timeSession.time));
-        for (int i = 0; i < timeSessions.length; i += 1) {
-          final TimeSession timeSession = timeSessions[i];
-          for (int j = 0; j < sessions.length; j++) {
-            final ClassSession classSession = sessions[j];
-            if (timeSession.time == classSession.timeSession.time) {
-              counts[i] = classSession.students.length;
-              students[i].addAll(classSession.students);
-            }
+        // TODO: Make them Correspond
+        for (int i = 0; i < sessions.length; i += 1) {
+          final ClassSession session = sessions[i];
+          counts[i] = session.students.length;
+          for (int j = 0; j < session.students.length; j++) {
+            students[i].add(session.students[j]);
           }
         }
         exportCareerSchedule.add(
@@ -161,15 +184,22 @@ class ScheduleRepository extends BaseScheduleRepository {
       stopwatch.stop();
 
       await _schedulerApiClient.createMasterList(
-          schedules: exportStudentSchedule,);
+        schedules: exportStudentSchedule,
+        time: time,
+      );
       await _schedulerApiClient.createStudentSchedule(
-          schedules: exportStudentSchedule,);
+        schedules: exportStudentSchedule,
+        time: time,
+      );
       await _schedulerApiClient.createAttendanceSchedule(
         careerSessions: exportCareerSchedule,
         times: timeSessions,
+        time: time,
       );
       await _schedulerApiClient.createCareerCounts(
-          careers: exportCareerSchedule,);
+        careers: exportCareerSchedule,
+        time: time,
+      );
     } catch (e) {
       debugPrint('Error with firebase: $e');
     }
@@ -189,9 +219,9 @@ class ScheduleRepository extends BaseScheduleRepository {
   }
 
   Future<void> _batchUpload(
-    CollectionReference collection,
-    List<Map<String, dynamic>> data,
-  ) async {
+      CollectionReference collection,
+      List<Map<String, dynamic>> data,
+      ) async {
     WriteBatch batch = FirebaseFirestore.instance.batch();
     for (var item in data) {
       DocumentReference docRef = collection.doc();
@@ -210,12 +240,11 @@ class ScheduleRepository extends BaseScheduleRepository {
 
       return a.student.firstName.compareTo(b.student.firstName);
     });
-
   }
 
   void _finalAssignment() {
     List<StudentSchedule> remainingSchedules =
-        studentSchedules.where((element) => !element.isFull).toList();
+    studentSchedules.where((element) => !element.isFull).toList();
     for (StudentSchedule remainingSchedule in remainingSchedules) {
       while (!remainingSchedule.isFull) {
         for (ClassSession remainingClass in classes) {
@@ -236,7 +265,7 @@ class ScheduleRepository extends BaseScheduleRepository {
     final List<ClassSession> notMin = classes
         .where(
           (element) => element.students.length < element.career.minClassSize,
-        )
+    )
         .toList();
     for (var minClass in notMin) {
       for (StudentSchedule schedule in studentSchedules) {
@@ -250,7 +279,7 @@ class ScheduleRepository extends BaseScheduleRepository {
 
   void _secondaryAssignment() {
     List<StudentSchedule> remainingSchedules =
-        studentSchedules.where((element) => !element.isFull).toList();
+    studentSchedules.where((element) => !element.isFull).toList();
     for (StudentSchedule remainingSchedule in remainingSchedules) {
       while (!remainingSchedule.isFull) {
         for (ClassSession remainingClass in classes) {
@@ -304,14 +333,11 @@ class ScheduleRepository extends BaseScheduleRepository {
       );
       for (int i = 0; i < 5; i++) {
         final int careerPriority = getCareerId(index: i, student: student);
-        if (careerPriority <= 0) {
-          continue;
-        }
+        if (careerPriority <= 0) continue;
         final Career career =
-            careers.firstWhere((element) => element.excelNum == careerPriority);
-
+        careers.firstWhere((element) => element.excelNum == careerPriority);
         final List<ClassSession> correspondingClasses =
-            classes.where((element) => element.career.id == career.id).toList();
+        classes.where((element) => element.career.id == career.id).toList();
         for (ClassSession correspondingClass in correspondingClasses) {
           bool sessionAvailable = getSessionAvailable(
             correspondingClass: correspondingClass,
@@ -350,6 +376,9 @@ class ScheduleRepository extends BaseScheduleRepository {
   Future<List<Career>> _getAllCareers() async =>
       await CareersApiClient().loadCareers();
 
+  Future<List<School>> _getAllSchools() async =>
+      await SchoolsApiClient().loadSchools();
+
   Future<List<Student>> _getAllStudents() async =>
       await StudentApiClient().getStudents();
 
@@ -361,7 +390,7 @@ class ScheduleRepository extends BaseScheduleRepository {
     required StudentSchedule schedule,
   }) =>
       !schedule.sessions.any(
-        (session) =>
-            correspondingClass.timeSession.time == session.timeSession.time,
+            (session) =>
+        correspondingClass.timeSession.time == session.timeSession.time,
       );
 }
