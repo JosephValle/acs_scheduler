@@ -1,4 +1,3 @@
-
 import 'package:adams_county_scheduler/network_interface/collection_names.dart';
 import 'package:adams_county_scheduler/objects/time_session.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -23,7 +22,7 @@ class SchedulerApiClient {
     required String session,
   }) async {
     DocumentReference ref =
-    await _firestore.collection(sessionsCollection).add({
+        await _firestore.collection(sessionsCollection).add({
       'time': Timestamp.fromDate(time),
       'session': session,
     });
@@ -50,9 +49,9 @@ class SchedulerApiClient {
     return querySnapshot.docs
         .map(
           (doc) => TimeSession.fromJson(
-        doc.data() as Map<String, dynamic>,
-      ),
-    ) // Assign the document ID to the TimeSession id field
+            doc.data() as Map<String, dynamic>,
+          ),
+        ) // Assign the document ID to the TimeSession id field
         .toList();
   }
 
@@ -90,15 +89,15 @@ class SchedulerApiClient {
 
       // Iterate over the schedules and fill the data
       for (var career in careers) {
-        List<String> row = [
-          career.excelId.toString(),
+        List<dynamic> row = [
+          career.excelId,
           career.career,
           career.room,
         ];
 
         // Assuming there are always 3 sessions
         for (int session in career.sessionCounts) {
-          row.add(session.toString());
+          row.add(session);
         }
 
         sheetObject.appendRow(row);
@@ -213,7 +212,7 @@ class SchedulerApiClient {
           if (students.isEmpty) continue;
           final TimeSession time = times[i];
           students.sort(
-                (a, b) => '${a.lastName}, ${a.firstName}'
+            (a, b) => '${a.lastName}, ${a.firstName}'
                 .compareTo('${b.lastName}, ${b.firstName}'),
           );
           List<RowContent> rows = [];
