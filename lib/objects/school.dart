@@ -80,6 +80,32 @@ class School extends HiveObject {
     required this.time,
   });
 
+  // copyWith method
+  School copyWith({
+    String? id,
+    String? name,
+    String? shortName,
+    String? category,
+    String? imageUrl,
+    int? studentCount,
+    int? activeCareerCount,
+    int? classroomCount,
+    String? time,
+  }) {
+    return School(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      shortName: shortName ?? this.shortName,
+      category: category ?? this.category,
+      imageUrl: imageUrl ?? this.imageUrl,
+      studentCount: studentCount ?? this.studentCount,
+      activeCareerCount: activeCareerCount ?? this.activeCareerCount,
+      classroomCount: classroomCount ?? this.classroomCount,
+      time: time ?? this.time,
+    );
+  }
+
+
   factory School.fromJson(Map<String, dynamic> json) => _$SchoolFromJson(json);
 
   Map<String, dynamic> toJson() => _$SchoolToJson(this);

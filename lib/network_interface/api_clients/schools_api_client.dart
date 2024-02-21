@@ -1,8 +1,11 @@
 import 'dart:async';
 
+import 'package:adams_county_scheduler/network_interface/api_clients/students_api_client.dart';
 import 'package:adams_county_scheduler/objects/school.dart';
+import 'package:adams_county_scheduler/objects/student.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../collection_names.dart';
@@ -77,5 +80,35 @@ class SchoolsApiClient {
         .docs
         .map<School>((e) => School.fromJson(e.data()))
         .toList();
+  }
+
+
+  Future<void> deleteSchoolStudents({required School school}) async {
+    try {
+      final List<Student> students = (await StudentApiClient().getStudents())
+          .where((student) => student.school == school.shortName)
+          .toList();
+
+      // Assuming 'students' collection stores the students
+      WriteBatch batch = _firestore.batch();
+
+      // Step 2: Batch delete all students
+      for (final student in students) {
+        // Add delete operation to batch
+        var docRef = _firestore.collection('students').doc(student.id);
+        batch.delete(docRef);
+      }
+
+      // Committing the batch delete
+      await batch.commit();
+
+      // Step 3: Update school doc 'studentCount' field to 0
+      var schoolDocRef = _firestore.collection('schools').doc(school.id);
+      await schoolDocRef.update({'studentCount': 0});
+
+    } catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
   }
 }
