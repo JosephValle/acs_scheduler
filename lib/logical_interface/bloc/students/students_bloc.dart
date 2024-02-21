@@ -61,15 +61,15 @@ class StudentsBloc extends Bloc<StudentsEvent, StudentsState> {
 
       String school = data[indexes[2]]!.value.toString();
 
-      String firstChoice = data[indexes[3]]!.value.toString();
+      String firstChoice = data[indexes[3]]?.value.toString() ?? 1.toString();
 
-      String secondChoice = data[indexes[4]]!.value.toString();
+      String secondChoice = data[indexes[4]]?.value.toString() ?? 1.toString();
 
-      String thirdChoice = data[indexes[5]]!.value.toString();
+      String thirdChoice = data[indexes[5]]?.value.toString() ?? 1.toString();
 
-      String fourthChoice = data[indexes[6]]!.value.toString();
+      String fourthChoice = data[indexes[6]]?.value.toString() ?? 1.toString();
 
-      String fifthChoice = data[indexes[7]]!.value.toString();
+      String fifthChoice = data[indexes[7]]?.value.toString() ?? 1.toString();
 
       String? schoolIdFromMap = schoolsMapping[school];
 
