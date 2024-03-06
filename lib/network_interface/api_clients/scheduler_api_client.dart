@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_excel/excel.dart';
+import 'package:intl/intl.dart';
 
 import '../../objects/export_careers_schedule.dart';
 import '../../objects/export_student_schedule.dart';
@@ -167,7 +168,15 @@ class SchedulerApiClient {
 
       for (ExportStudentSchedule schedule in schedules) {
         List<RowContent> rows = [];
-
+        // Sort them based on time,
+        // Format is HH:MM AM/PM
+        schedule.sessions.sort((a, b) {
+          // Parse the time strings into DateTime objects for comparison
+          DateFormat dateFormat = DateFormat('hh:mm a'); // Using the DateFormat class from the intl package
+          DateTime timeA = dateFormat.parse(a.time);
+          DateTime timeB = dateFormat.parse(b.time);
+          return timeA.compareTo(timeB); // Compare the DateTime objects to sort
+        });
         for (var session in schedule.sessions) {
           rows.add(
             RowContent()

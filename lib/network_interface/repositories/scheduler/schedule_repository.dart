@@ -7,6 +7,7 @@ import 'package:adams_county_scheduler/objects/export_student_schedule.dart';
 import 'package:adams_county_scheduler/objects/student_schedule.dart';
 import 'package:adams_county_scheduler/utilities/functions/format_timestamp.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:uuid/uuid.dart';
 import '../../../objects/career.dart';
@@ -31,7 +32,7 @@ class ScheduleRepository extends BaseScheduleRepository {
     stopwatch.reset();
     stopwatch.start();
     final String time = isAm ? 'AM' : 'PM';
-    print("TIME: $time");
+    print('TIME: $time');
     final List<Career> careers = await _getAllCareers();
     debugPrint(
       'Done downloading careers: ${stopwatch.elapsedMilliseconds} ms in',
@@ -49,7 +50,7 @@ class ScheduleRepository extends BaseScheduleRepository {
       // Use the student's school field to get the corresponding School object from the map
       final School? studentSchool = schoolMap[student.school];
       if (studentSchool?.time == time) {
-        print("Student: ${student.lastName}, School: ${student.school}");
+        print('Student: ${student.lastName}, School: ${student.school}');
       }
       return studentSchool?.time == time;
     }).toList();
@@ -340,8 +341,15 @@ class ScheduleRepository extends BaseScheduleRepository {
         if (careerPriority <= 0) {
           continue;
         }
-        final Career career =
-            careers.firstWhere((element) => element.excelNum == careerPriority);
+        // Use `firstWhere` with `orElse` to safely handle cases where the career does not exist
+        final Career? career = careers.firstWhereOrNull(
+              (element) => element.excelNum == careerPriority, // Use null to indicate no matching career found.
+        );
+
+        if (career == null) {
+          continue; // No matching career found, so continue to the next priority.
+        }
+
 
         final List<ClassSession> correspondingClasses =
             classes.where((element) => element.career.id == career.id).toList();

@@ -105,7 +105,7 @@ class _SchoolTileState extends State<SchoolTile> {
                                     school = school.copyWith(studentCount: 0);
                                   });
                                 },
-                                icon: Icon(Icons.delete)),
+                                icon: const Icon(Icons.delete),),
                           ),
                         ),
                         Align(
