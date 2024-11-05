@@ -58,7 +58,7 @@ dependencies:
   collection: ^1.18.0
   docx_template:
     git:
-      url: git@github.com:hunterwilhelm/docx_template_dart.git
+      url: https://github.com/hunterwilhelm/docx_template_dart.git
       commit: 8947449
   archive: ^3.5.0
 
