@@ -93,3 +93,14 @@ class SetCareerSessionForSchool extends CareersEvent {
     required this.session,
   });
 }
+
+/// This is used to update a career
+///
+/// [career] is the career to be updated
+class UpdateCareer extends CareersEvent {
+  final Career career;
+
+  UpdateCareer({
+    required this.career,
+  });
+}

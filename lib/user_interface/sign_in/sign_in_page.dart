@@ -1,4 +1,5 @@
 import 'package:adams_county_scheduler/logical_interface/bloc/auth/auth_bloc.dart';
+import 'package:adams_county_scheduler/user_interface/sign_in/widgets/reset_password_dialog.dart';
 import 'package:adams_county_scheduler/user_interface/widgets/colored_container.dart';
 import 'package:adams_county_scheduler/user_interface/widgets/svg_icon.dart';
 import 'package:adams_county_scheduler/utilities/colors/ac_colors.dart';
@@ -12,7 +13,10 @@ import '../../utilities/routes/routes.dart';
 /// {@category SignIn}
 /// {@subCategory User Interface}
 class SignInPage extends StatelessWidget {
-  const SignInPage({super.key});
+  SignInPage({super.key});
+
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -23,34 +27,84 @@ class SignInPage extends StatelessWidget {
         }
       },
       child: Scaffold(
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SvgIcon(
-                name: 'adams_county',
-                color: null,
-                size: MediaQuery.of(context).size.width / 4,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: MouseRegion(
-                cursor: SystemMouseCursors.click,
-                child: ColoredContainer(
-                  onTap: () {
-                    context.read<AuthBloc>().add(SignIn());
-                  },
-                  backgroundColor: ACColors.primaryColor,
-                  child: Text(
-                    'Sign In',
-                    style: ColoredContainerTextStyle(),
+        body: Center(
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width / 3,
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Row(),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SvgIcon(
+                    name: 'adams_county',
+                    color: null,
+                    size: MediaQuery.of(context).size.width / 4,
                   ),
                 ),
-              ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    controller: emailController,
+                    decoration: const InputDecoration(
+                      labelText: 'Email',
+                      hintText: 'email',
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    controller: passwordController,
+                    decoration: const InputDecoration(
+                      labelText: 'Password',
+                    ),
+                    obscureText: true,
+                    onFieldSubmitted: (value) {
+                      context.read<AuthBloc>().add(
+                            SignIn(
+                              email: emailController.text.trim(),
+                              password: passwordController.text.trim(),
+                            ),
+                          );
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: ColoredContainer(
+                      onTap: () {
+                        context.read<AuthBloc>().add(
+                              SignIn(
+                                email: emailController.text.trim(),
+                                password: passwordController.text.trim(),
+                              ),
+                            );
+                      },
+                      backgroundColor: ACColors.primaryColor,
+                      child: Text(
+                        'Sign In',
+                        style: ColoredContainerTextStyle(),
+                      ),
+                    ),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () => showDialog(
+                      context: context,
+                      builder: (context) => ResetPasswordDialog()),
+                  child: const Text(
+                    'Reset Password',
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

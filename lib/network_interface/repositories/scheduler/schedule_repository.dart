@@ -77,8 +77,8 @@ class ScheduleRepository extends BaseScheduleRepository {
     );
     debugPrint('Done Initial Assign: ${stopwatch.elapsedMilliseconds} ms in');
     _cleanup();
-    _secondaryAssignment();
-    _removeSmallClasses();
+    _secondaryAssignment(careers: careers);
+    // _removeSmallClasses();
     _finalAssignment();
     _finalCleanUp();
     debugPrint('Done All Scheduling: ${stopwatch.elapsedMilliseconds} ms in');
@@ -282,24 +282,38 @@ class ScheduleRepository extends BaseScheduleRepository {
     classes.sort((a, b) => a.students.length.compareTo(b.students.length));
   }
 
-  void _secondaryAssignment() {
-    List<StudentSchedule> remainingSchedules =
-        studentSchedules.where((element) => !element.isFull).toList();
-    for (StudentSchedule remainingSchedule in remainingSchedules) {
-      while (!remainingSchedule.isFull) {
-        for (ClassSession remainingClass in classes) {
-          bool sessionAvailable = getSessionAvailable(
-            correspondingClass: remainingClass,
-            schedule: remainingSchedule,
-          );
-          if (!remainingClass.isFull && sessionAvailable) {
-            remainingClass.students.add(remainingSchedule.student);
-            remainingSchedule.sessions.add(remainingClass);
+  void _secondaryAssignment({    required List<Career> careers,
+  }) {
+    // Iterate over each student schedule that isn't full
+    List<StudentSchedule> partiallyFilledSchedules = studentSchedules.where((schedule) => !schedule.isFull).toList();
+    for (StudentSchedule schedule in partiallyFilledSchedules) {
+      // Revisit each student's career priorities for remaining open slots
+      for (int priority = 0; priority < 5; priority++) {
+        int careerId = getCareerId(index: priority, student: schedule.student);
+        Career? priorityCareer = careers.firstWhereOrNull((career) => career.excelNum == careerId);
+
+        if (priorityCareer == null) continue; // If career doesn't exist, skip to next priority
+
+        // Find classes for this priority career that are not full and the student is not already scheduled for
+        List<ClassSession> availableClasses = classes.where((session) =>
+        session.career.id == priorityCareer.id &&
+            !session.isFull &&
+            getSessionAvailable(correspondingClass: session, schedule: schedule),
+        ).toList();
+
+        // Attempt to assign the student to one of these classes
+        for (ClassSession classSession in availableClasses) {
+          if (!classSession.isFull && getSessionAvailable(correspondingClass: classSession, schedule: schedule)) {
+            classSession.students.add(schedule.student);
+            schedule.sessions.add(classSession);
+            break; // Exit after successfully assigning to one class to ensure spreading across priorities
           }
         }
+        if (schedule.isFull) break; // If schedule is now full, stop trying to fill it
       }
     }
   }
+
 
   void _cleanup() {
     classes.removeWhere((element) => element.students.isEmpty);
@@ -338,18 +352,16 @@ class ScheduleRepository extends BaseScheduleRepository {
       );
       for (int i = 0; i < 5; i++) {
         final int careerPriority = getCareerId(index: i, student: student);
-        if (careerPriority <= 0) {
-          continue;
-        }
         // Use `firstWhere` with `orElse` to safely handle cases where the career does not exist
         final Career? career = careers.firstWhereOrNull(
-              (element) => element.excelNum == careerPriority, // Use null to indicate no matching career found.
+          (element) =>
+              element.excelNum ==
+              careerPriority, // Use null to indicate no matching career found.
         );
 
         if (career == null) {
           continue; // No matching career found, so continue to the next priority.
         }
-
 
         final List<ClassSession> correspondingClasses =
             classes.where((element) => element.career.id == career.id).toList();
@@ -404,5 +416,7 @@ class ScheduleRepository extends BaseScheduleRepository {
       !schedule.sessions.any(
         (session) =>
             correspondingClass.timeSession.time == session.timeSession.time,
-      );
+      ) &&
+      !schedule.sessions.any((session) =>
+          session.career.excelNum == correspondingClass.career.excelNum,);
 }

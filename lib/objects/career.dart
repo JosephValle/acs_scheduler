@@ -69,4 +69,30 @@ class Career extends HiveObject {
   factory Career.fromJson(Map<String, dynamic> json) => _$CareerFromJson(json);
 
   Map<String, dynamic> toJson() => _$CareerToJson(this);
+
+  // copyWith method
+
+  Career copyWith({
+    String? id,
+    String? name,
+    String? category,
+    List<String>? speakers,
+    Session? session,
+    String? room,
+    int? excelNum,
+    int? minClassSize,
+    int? maxClassSize,
+  }) {
+    return Career(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      category: category ?? this.category,
+      speakers: speakers ?? this.speakers,
+      session: session ?? this.session,
+      room: room ?? this.room,
+      excelNum: excelNum ?? this.excelNum,
+      minClassSize: minClassSize ?? this.minClassSize,
+      maxClassSize: maxClassSize ?? this.maxClassSize,
+    );
+  }
 }

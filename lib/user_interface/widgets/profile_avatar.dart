@@ -15,7 +15,7 @@ class ProfileAvatar extends StatelessWidget {
       radius: radius,
       backgroundColor: ACColors.primaryColor,
       foregroundImage: imageUrl.isEmpty ? null : NetworkImage(imageUrl),
-      child: Icon(Icons.person, color: Theme.of(context).colorScheme.onBackground,),
+      child: Icon(Icons.person, color: Theme.of(context).colorScheme.onSurface,),
     );
   }
 }

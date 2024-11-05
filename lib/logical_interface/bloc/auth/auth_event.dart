@@ -14,7 +14,12 @@ class GetProfile extends AuthEvent {
 }
 
 ///This event sends the signal to start the sign in process
-class SignIn extends AuthEvent {}
+class SignIn extends AuthEvent {
+  final String email;
+  final String password;
+
+  SignIn({required this.email, required this.password});
+}
 
 ///This event sends the signal to sign the user out
-class SignOut extends AuthEvent{}
+class SignOut extends AuthEvent {}

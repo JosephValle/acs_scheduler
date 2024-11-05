@@ -26,9 +26,9 @@ class AuthRepository implements BaseAuthRepository {
   }
 
   @override
-  Future<Profile?> signIn() async {
+  Future<Profile?> signIn({required String email, required String password}) async {
     try {
-      return await _authApiClient.signIn();
+      return await _authApiClient.signIn( email: email, password: password);
     } catch (e) {
       debugPrint('sign in error $e');
       return null;

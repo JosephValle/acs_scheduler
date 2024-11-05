@@ -47,15 +47,18 @@ class _HomePageState extends State<HomePage> {
               body: CollapsibleSidebar(
                 selectedIconBox: ACColors.secondaryColor,
                 sidebarBoxShadow: const [],
-                selectedIconColor: Theme.of(context).colorScheme.onBackground,
-                backgroundColor: Theme.of(context).colorScheme.background,
+                selectedIconColor: Theme.of(context).colorScheme.onSurface,
+                backgroundColor: Theme.of(context).colorScheme.surface,
                 avatarImg: (state.currentUser?.imageUrl.isEmpty ?? true)
                     ? null
                     : NetworkImage(state.currentUser?.imageUrl ?? ''),
                 avatarBackgroundColor: ACColors.secondaryColor,
-                title: state.currentUser?.displayName ??
-                    state.currentUser?.email ??
-                    'User',
+                title: state.currentUser != null &&
+                        state.currentUser!.displayName.isEmpty
+                    ? 'User'
+                    : state.currentUser?.displayName ??
+                        state.currentUser?.email ??
+                        'User',
                 items: getNavigationItems(
                   currentUser: state.currentUser,
                   navigationState: navigationState,

@@ -28,12 +28,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<GetProfile>(_mapGetProfileToState);
     on<SignIn>(_mapSignInToState);
     on<SignOut>(_mapSignOutToState);
-    if(currentUser != null){
+    if (currentUser != null) {
       add(GetProfile(userId: currentUser.uid));
     }
   }
 
-  void _mapSignOutToState(SignOut event, emit) async{
+  void _mapSignOutToState(SignOut event, emit) async {
     await _authRepository.signOut();
     currentUser = null;
 
@@ -41,16 +41,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   void _mapSignInToState(SignIn event, emit) async {
-    Profile? user = await _authRepository.signIn();
+    Profile? user = await _authRepository.signIn(
+      email: event.email,
+      password: event.password,
+    );
     if (user != null) {
       currentUser = user;
-      emit(SignInSuccess( currentUser: currentUser));
+      emit(SignInSuccess(currentUser: currentUser));
     } else {
       emit(
         SignInFailed(
-            message:
-                'Sorry, we had some trouble logging you in. Please try again.',
-            currentUser: currentUser,),
+          message:
+              'Sorry, we had some trouble logging you in. Please try again.',
+          currentUser: currentUser,
+        ),
       );
     }
   }
@@ -59,7 +63,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Profile? profile = await _authRepository.getProfile(userId: event.userId);
 
     if (profile != null) {
-
       if (profile.id == _authRepository.currentUser?.uid) {
         currentUser = profile;
       }

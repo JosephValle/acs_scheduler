@@ -7,6 +7,7 @@ import 'package:adams_county_scheduler/user_interface/school_detail/school_detai
 import 'package:adams_county_scheduler/utilities/routes/routes.dart';
 import 'package:flutter/material.dart';
 
+import '../../objects/career.dart';
 import '../../user_interface/career_creation/career_creation_page.dart';
 import '../../user_interface/home/home_page.dart';
 import '../../user_interface/sign_in/sign_in_page.dart';
@@ -23,17 +24,25 @@ class RoutesMap {
 
   static final Map<String, Widget Function(BuildContext)> routesMap = {
     Routes.homePage: (context) => const HomePage(),
-    Routes.signInPage: (context) => const SignInPage(),
+    Routes.signInPage: (context) => SignInPage(),
     Routes.schoolCreationPage: (context) => const SchoolCreationPage(),
-    Routes.careerCreationPage: (context) => const CareerCreationPage(),
     Routes.studentCreationPage: (context) => const StudentCreationPage(),
     Routes.bulkStudentUploadPage: (context) => const BulkStudentUploadPage(),
     Routes.schedulerPage: (context) => const SchedulerPage(),
-
   };
 
   static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case Routes.careerCreationPage:
+        {
+          Career? career = settings.arguments as Career?;
+          return MaterialPageRoute(
+            builder: (context) => CareerCreationPage(
+              career: career,
+            ),
+            settings: settings,
+          );
+        }
       case Routes.schoolDetailPage:
         {
           SchoolDetailPageArgs args =
@@ -51,7 +60,9 @@ class RoutesMap {
 
           return MaterialPageRoute(
             builder: (context) => CareerManagement(
-                schoolId: args.schoolId, schoolName: args.schoolName,),
+              schoolId: args.schoolId,
+              schoolName: args.schoolName,
+            ),
             settings: settings,
           );
         }

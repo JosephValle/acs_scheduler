@@ -90,4 +90,9 @@ class CareersRepository extends BaseCareersRepository {
   Future<void> deleteCareer({required Career career}) async {
     await _apiClient.deleteCareer(career);
   }
+
+  @override
+  Future<void> updateCareer({required Career career}) {
+    return _apiClient.updateCareer(career);
+  }
 }

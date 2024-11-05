@@ -56,7 +56,7 @@ class AccountPage extends StatelessWidget {
                   child: Text(
                     'Sign Out',
                     style: TextStyle(
-                        color: Theme.of(context).colorScheme.onBackground,),
+                        color: Theme.of(context).colorScheme.onSurface,),
                   ),
                 ),
               ),

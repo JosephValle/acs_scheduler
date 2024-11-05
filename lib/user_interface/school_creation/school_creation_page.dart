@@ -83,7 +83,7 @@ class _SchoolCreationPageState extends State<SchoolCreationPage> {
                             Icons.image_outlined,
                             color: Theme.of(context)
                                 .colorScheme
-                                .onBackground,
+                                .onSurface,
                             size: MediaQuery.of(context).size.width / 20,
                           ),
                         )
@@ -231,7 +231,7 @@ class _SchoolCreationPageState extends State<SchoolCreationPage> {
                     child: Text(
                       uploadProgress > 0 ? 'Uploading Image' : 'Create School',
                       style: TextStyle(
-                        color: Theme.of(context).colorScheme.onBackground,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                   ),

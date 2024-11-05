@@ -148,7 +148,7 @@ class _SchedulerPageState extends State<SchedulerPage> {
         padding: const EdgeInsets.all(16.0),
         child: Container(
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.background,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(25),
             boxShadow: [
               BoxShadow(

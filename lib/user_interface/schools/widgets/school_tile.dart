@@ -83,7 +83,7 @@ class _SchoolTileState extends State<SchoolTile> {
                                     .withOpacity(0.0),
                                 Theme.of(context)
                                     .colorScheme
-                                    .background
+                                    .surface
                                     .withOpacity(.7),
                               ],
                               stops: const [
@@ -120,7 +120,7 @@ class _SchoolTileState extends State<SchoolTile> {
                               ),
                               color: Theme.of(context)
                                   .colorScheme
-                                  .background
+                                  .surface
                                   .withOpacity(.7),
                             ),
                             child: Padding(
@@ -155,7 +155,7 @@ class _SchoolTileState extends State<SchoolTile> {
                                                 fontWeight: FontWeight.w200,
                                                 color: Theme.of(context)
                                                     .colorScheme
-                                                    .onBackground,
+                                                    .onSurface,
                                               ),
                                               children: [
                                                 TextSpan(

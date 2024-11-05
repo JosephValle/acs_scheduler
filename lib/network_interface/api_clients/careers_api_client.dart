@@ -119,4 +119,8 @@ class CareersApiClient {
       debugPrint('Error deleting career: $e');
     }
   }
+
+  Future<void> updateCareer(Career career)async {
+    await _firestore.collection(careersCollection).doc(career.id).update(career.toJson());
+  }
 }

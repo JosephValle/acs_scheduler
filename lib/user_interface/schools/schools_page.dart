@@ -20,7 +20,7 @@ class SchoolsPage extends StatelessWidget {
             },
             child: Icon(
               Icons.add,
-              color: Theme.of(context).colorScheme.onBackground,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
           body: ListView.builder(

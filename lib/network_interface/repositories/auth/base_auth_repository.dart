@@ -16,7 +16,7 @@ abstract class BaseAuthRepository {
   Future<Profile?> getProfile({required String userId});
 
   /// This method is used to sign into the application via google
-  Future<Profile?> signIn();
+  Future<Profile?> signIn({required String email, required String password});
 
   /// This getter gets the current FirebaseAuth user
   User? get currentUser;

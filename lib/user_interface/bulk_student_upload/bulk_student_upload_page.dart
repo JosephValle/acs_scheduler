@@ -71,7 +71,7 @@ class _BulkStudentUploadPageState extends State<BulkStudentUploadPage> {
                           child: Text(
                             'Download Template File',
                             style: TextStyle(
-                              color: Theme.of(context).colorScheme.background,
+                              color: Theme.of(context).colorScheme.surface,
                             ),
                           ),
                         ),
@@ -138,7 +138,7 @@ class _BulkStudentUploadPageState extends State<BulkStudentUploadPage> {
                           child: Text(
                             'Select File',
                             style: TextStyle(
-                              color: Theme.of(context).colorScheme.background,
+                              color: Theme.of(context).colorScheme.surface,
                             ),
                           ),
                         ),
@@ -192,7 +192,7 @@ class _BulkStudentUploadPageState extends State<BulkStudentUploadPage> {
                             style: TextStyle(
                               color: Theme.of(context)
                                   .colorScheme
-                                  .background,
+                                  .surface,
                             ),
                           ),
                         ),

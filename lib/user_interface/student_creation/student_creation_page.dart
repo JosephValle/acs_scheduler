@@ -187,7 +187,7 @@ class _StudentCreationPageState extends State<StudentCreationPage> {
                     child: Text(
                       '${widget.student != null ? 'Edit' : 'Create'} Student',
                       style: TextStyle(
-                        color: Theme.of(context).colorScheme.onBackground,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                   ),

@@ -24,6 +24,7 @@ class CareersBloc extends Bloc<CareersEvent, CareersState> {
     on<RemoveCareerFromSchool>(_mapRemoveCareerFromSchoolToState);
     on<SetCareerSessionForSchool>(_mapSetCareerSessionForSchoolToState);
     on<DeleteCareer>(_deleteCareer);
+    on<UpdateCareer>(_updateCareer);
   }
 
   void _mapSetCareerSessionForSchoolToState(
@@ -127,5 +128,16 @@ class CareersBloc extends Bloc<CareersEvent, CareersState> {
     await _careersRepository.deleteCareer(career: event.career);
     careers.removeWhere((element) => element.id == event.career.id);
     emit(CareersLoaded(careers: careers));
+  }
+
+  void _updateCareer(
+    UpdateCareer event,
+    emit,
+  ) async {
+    await _careersRepository.updateCareer(career: event.career);
+    careers.removeWhere((element) => element.id == event.career.id);
+    careers.add(event.career);
+    careers.sort((a, b) => a.name.compareTo(b.name));
+    emit(CareerCreated(careers: careers));
   }
 }

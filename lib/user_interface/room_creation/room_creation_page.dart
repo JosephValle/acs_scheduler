@@ -130,7 +130,7 @@ class _RoomCreationPageState extends State<RoomCreationPage> {
                     child: Text(
                       'Create Room',
                       style: TextStyle(
-                          color: Theme.of(context).colorScheme.onBackground,),
+                          color: Theme.of(context).colorScheme.onSurface,),
                     ),
                   ),
                 ),

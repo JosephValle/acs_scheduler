@@ -5,8 +5,12 @@ import 'package:adams_county_scheduler/utilities/colors/ac_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../objects/career.dart';
+
 class CareerCreationPage extends StatefulWidget {
-  const CareerCreationPage({super.key});
+  final Career? career;
+
+  const CareerCreationPage({this.career, super.key});
 
   @override
   State<CareerCreationPage> createState() => _CareerCreationPageState();
@@ -26,6 +30,15 @@ class _CareerCreationPageState extends State<CareerCreationPage> {
   void initState() {
     popped = false;
     super.initState();
+    if (widget.career != null) {
+      _categoryController.text = widget.career!.category;
+      _nameController.text = widget.career!.name;
+      _roomController.text = widget.career!.room;
+      _excelNumController.text = widget.career!.excelNum.toString();
+      _minClassSizeController.text = widget.career!.minClassSize.toString();
+      _maxClassSizeController.text = widget.career!.maxClassSize.toString();
+      speakers = widget.career!.speakers;
+    }
   }
 
   @override
@@ -39,7 +52,7 @@ class _CareerCreationPageState extends State<CareerCreationPage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Add a career'),
+          title: Text(widget.career != null ? 'Edit Career' : 'Add a career'),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -205,8 +218,11 @@ class _CareerCreationPageState extends State<CareerCreationPage> {
                           minClassSize != null &&
                           maxClassSize != null &&
                           maxClassSize >= minClassSize) {
-                        context.read<CareersBloc>().add(
-                              CreateCareer(
+
+                        if (widget.career != null) {
+                          context.read<CareersBloc>().add(
+                            UpdateCareer(
+                              career: widget.career!.copyWith(
                                 name: _nameController.text.trim(),
                                 category: _categoryController.text.trim(),
                                 speakers: speakers,
@@ -215,14 +231,29 @@ class _CareerCreationPageState extends State<CareerCreationPage> {
                                 maxClassSize: maxClassSize,
                                 minClassSize: minClassSize,
                               ),
-                            );
+                            ),
+                          );
+
+                        } else {
+                          context.read<CareersBloc>().add(
+                            CreateCareer(
+                              name: _nameController.text.trim(),
+                              category: _categoryController.text.trim(),
+                              speakers: speakers,
+                              excelNum: excelNum,
+                              room: _roomController.text.trim(),
+                              maxClassSize: maxClassSize,
+                              minClassSize: minClassSize,
+                            ),
+                          );
+                        }
                       }
                     },
                     backgroundColor: ACColors.secondaryColor,
                     child: Text(
-                      'Create Career',
+                      widget.career != null ? 'Update Career' : 'Create Career',
                       style: TextStyle(
-                        color: Theme.of(context).colorScheme.onBackground,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                   ),

@@ -2,6 +2,7 @@ import 'package:adams_county_scheduler/user_interface/careers/widgets/delete_car
 import 'package:flutter/material.dart';
 
 import '../../../objects/career.dart';
+import '../../../utilities/routes/routes.dart';
 
 class CareerTile extends StatelessWidget {
   final Career career;
@@ -35,9 +36,19 @@ class CareerTile extends StatelessWidget {
               Text('Min: ${career.minClassSize} | Max: ${career.maxClassSize}'),
             ],
           ),
-          trailing: IconButton(
-            icon: const Icon(Icons.delete),
-            onPressed: () => _handleDelete(context),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                tooltip: 'Edit',
+                  onPressed: () => _handleEdit(context),
+                  icon: const Icon(Icons.edit),),
+              IconButton(
+                tooltip: 'Delete',
+                icon: const Icon(Icons.delete),
+                onPressed: () => _handleDelete(context),
+              ),
+            ],
           ),
         ),
         Container(
@@ -49,9 +60,15 @@ class CareerTile extends StatelessWidget {
     );
   }
 
+  void _handleEdit(BuildContext context) {
+    Navigator.of(context)
+        .pushNamed(Routes.careerCreationPage, arguments: career);
+  }
+
   void _handleDelete(BuildContext context) {
     showDialog(
-        context: context,
-        builder: (context) => DeleteCareerDialog(career: career),);
+      context: context,
+      builder: (context) => DeleteCareerDialog(career: career),
+    );
   }
 }

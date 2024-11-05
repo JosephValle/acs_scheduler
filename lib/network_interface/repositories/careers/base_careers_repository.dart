@@ -59,4 +59,9 @@ abstract class BaseCareersRepository {
   ///
   /// [career] is the [career] to be deleted
   Future<void> deleteCareer({required Career career});
+
+  /// Updates a career
+  ///
+  /// [career] is the career to be updated
+  Future<void> updateCareer({required Career career});
 }
