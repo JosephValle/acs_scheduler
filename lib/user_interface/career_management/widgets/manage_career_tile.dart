@@ -112,7 +112,7 @@ class _ManageCareerTileState extends State<ManageCareerTile> {
                                 Padding(
                                   padding: const EdgeInsets.only(left: 8.0),
                                   child: Text(
-                                    describeEnum(session),
+                                   session.name,
                                     style: const TextStyle(
                                         fontWeight: FontWeight.w600,),
                                   ),

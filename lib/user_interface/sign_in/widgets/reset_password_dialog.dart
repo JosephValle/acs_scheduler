@@ -48,15 +48,17 @@ class ResetPasswordDialog extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text('Cancel'),),
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('Cancel'),
+                    ),
                     TextButton(
                       onPressed: () {
                         if (emailController.text.trim().isEmpty) {
                           return;
                         }
                         _auth.sendPasswordResetEmail(
-                            email: emailController.text.trim(),);
+                          email: emailController.text.trim(),
+                        );
                         Navigator.of(context).pop();
                       },
                       child: const Text('Reset'),

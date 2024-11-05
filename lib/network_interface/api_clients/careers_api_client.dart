@@ -85,7 +85,7 @@ class CareersApiClient {
         .collection('$schoolsCollection/$schoolId/$careersCollection')
         .doc(careerId)
         .update(
-      {'session': describeEnum(session).toLowerCase()},
+      {'session': session.name.toLowerCase()},
     );
   }
 
