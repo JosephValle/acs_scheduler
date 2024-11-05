@@ -34,14 +34,16 @@ class _SchedulerPageState extends State<SchedulerPage> {
         return Scaffold(
           body: Stack(
             children: [
-              Column(
-                children: [
-                  Flex(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    direction: Axis.horizontal,
-                    children: [_buildSessions(), _buildSchedule()],
-                  ),
-                ],
+              SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Flex(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      direction: Axis.horizontal,
+                      children: [_buildSessions(), _buildSchedule()],
+                    ),
+                  ],
+                ),
               ),
               if( state is SchedulerLoading)
               Container(

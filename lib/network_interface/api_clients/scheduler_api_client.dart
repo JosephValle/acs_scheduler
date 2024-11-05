@@ -158,25 +158,23 @@ class SchedulerApiClient {
     required String time,
   }) async {
     try {
-      final ByteData data = await rootBundle
-          .load('assets/templates/student_schedule_template.docx');
-      final Uint8List bytes = data.buffer.asUint8List();
-      final docx = await DocxTemplate.fromBytes(bytes);
+      // Initialize content for the master document
+      Content masterContent = Content();
 
-      Content c = Content();
-      List<Content> plainContents = [];
+      // Map to hold content for each school
+      Map<String, List<PlainContent>> schoolContents = {};
 
       for (ExportStudentSchedule schedule in schedules) {
         List<RowContent> rows = [];
-        // Sort them based on time,
-        // Format is HH:MM AM/PM
+
+        // Sort sessions based on time
         schedule.sessions.sort((a, b) {
-          // Parse the time strings into DateTime objects for comparison
-          DateFormat dateFormat = DateFormat('hh:mm a'); // Using the DateFormat class from the intl package
+          DateFormat dateFormat = DateFormat('hh:mm a');
           DateTime timeA = dateFormat.parse(a.time);
           DateTime timeB = dateFormat.parse(b.time);
-          return timeA.compareTo(timeB); // Compare the DateTime objects to sort
+          return timeA.compareTo(timeB);
         });
+
         for (var session in schedule.sessions) {
           rows.add(
             RowContent()
@@ -185,17 +183,46 @@ class SchedulerApiClient {
               ..add(TextContent('key3', session.roomName)),
           );
         }
-        plainContents.add(
-          PlainContent('plainview')
-            ..add(TextContent('school', schedule.school))
-            ..add(TextContent('student', schedule.formattedName))
-            ..add(TableContent('table', rows)),
-        );
+
+        PlainContent plainContent = PlainContent('plainview')
+          ..add(TextContent('school', schedule.school))
+          ..add(TextContent('student', schedule.formattedName))
+          ..add(TableContent('table', rows));
+
+        // Add to master content by creating a fresh ListContent each time
+        masterContent.add(ListContent('plainlist', [plainContent]));
+
+        // Organize by school
+        if (!schoolContents.containsKey(schedule.school)) {
+          schoolContents[schedule.school] = [];
+        }
+        schoolContents[schedule.school]!.add(plainContent);
       }
-      c.add(ListContent('plainlist', plainContents));
-      final Uint8List d = Uint8List.fromList((await docx.generate(c))!);
-      final String fileName = 'Student Schedules - $time.docx';
-      return await uploadFile(d, fileName);
+
+      final ByteData masterData = await rootBundle
+          .load('assets/templates/student_schedule_template.docx');
+      final Uint8List masterBytes = masterData.buffer.asUint8List();
+      final docxTemplateMaster = await DocxTemplate.fromBytes(masterBytes);
+
+      final Uint8List masterDocBytes = Uint8List.fromList(
+        (await docxTemplateMaster.generate(masterContent))!,
+      );
+      final String masterFileName = 'Student Schedules - $time.docx';
+      final String masterUploadResult =
+          await uploadFile(masterDocBytes, masterFileName);
+
+      for (var school in schoolContents.keys) {
+        Content schoolContent = Content();
+        schoolContent.add(ListContent('plainlist', schoolContents[school]!));
+
+        final Uint8List schoolDocBytes = Uint8List.fromList(
+          (await docxTemplateMaster.generate(schoolContent))!,
+        );
+        final String schoolFileName = '$school Student Schedules.docx';
+        await uploadFile(schoolDocBytes, schoolFileName);
+      }
+
+      return masterUploadResult;
     } catch (e) {
       rethrow;
     }

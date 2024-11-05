@@ -204,6 +204,9 @@ class ScheduleRepository extends BaseScheduleRepository {
       );
     } catch (e) {
       debugPrint('Error with firebase: $e');
+      if (e is Error) {
+        debugPrint(e.stackTrace.toString());
+      }
     }
   }
 
@@ -282,38 +285,46 @@ class ScheduleRepository extends BaseScheduleRepository {
     classes.sort((a, b) => a.students.length.compareTo(b.students.length));
   }
 
-  void _secondaryAssignment({    required List<Career> careers,
+  void _secondaryAssignment({
+    required List<Career> careers,
   }) {
     // Iterate over each student schedule that isn't full
-    List<StudentSchedule> partiallyFilledSchedules = studentSchedules.where((schedule) => !schedule.isFull).toList();
+    List<StudentSchedule> partiallyFilledSchedules =
+        studentSchedules.where((schedule) => !schedule.isFull).toList();
     for (StudentSchedule schedule in partiallyFilledSchedules) {
       // Revisit each student's career priorities for remaining open slots
       for (int priority = 0; priority < 5; priority++) {
         int careerId = getCareerId(index: priority, student: schedule.student);
-        Career? priorityCareer = careers.firstWhereOrNull((career) => career.excelNum == careerId);
+        Career? priorityCareer =
+            careers.firstWhereOrNull((career) => career.excelNum == careerId);
 
-        if (priorityCareer == null) continue; // If career doesn't exist, skip to next priority
+        if (priorityCareer == null) {
+          continue;
+        }
 
-        // Find classes for this priority career that are not full and the student is not already scheduled for
-        List<ClassSession> availableClasses = classes.where((session) =>
-        session.career.id == priorityCareer.id &&
-            !session.isFull &&
-            getSessionAvailable(correspondingClass: session, schedule: schedule),
-        ).toList();
+        List<ClassSession> availableClasses = classes
+            .where(
+              (session) =>
+                  session.career.id == priorityCareer.id &&
+                  !session.isFull &&
+                  getSessionAvailable(
+                      correspondingClass: session, schedule: schedule),
+            )
+            .toList();
 
-        // Attempt to assign the student to one of these classes
         for (ClassSession classSession in availableClasses) {
-          if (!classSession.isFull && getSessionAvailable(correspondingClass: classSession, schedule: schedule)) {
+          if (!classSession.isFull &&
+              getSessionAvailable(
+                  correspondingClass: classSession, schedule: schedule)) {
             classSession.students.add(schedule.student);
             schedule.sessions.add(classSession);
-            break; // Exit after successfully assigning to one class to ensure spreading across priorities
+            break;
           }
         }
-        if (schedule.isFull) break; // If schedule is now full, stop trying to fill it
+        if (schedule.isFull) break;
       }
     }
   }
-
 
   void _cleanup() {
     classes.removeWhere((element) => element.students.isEmpty);
@@ -417,6 +428,8 @@ class ScheduleRepository extends BaseScheduleRepository {
         (session) =>
             correspondingClass.timeSession.time == session.timeSession.time,
       ) &&
-      !schedule.sessions.any((session) =>
-          session.career.excelNum == correspondingClass.career.excelNum,);
+      !schedule.sessions.any(
+        (session) =>
+            session.career.excelNum == correspondingClass.career.excelNum,
+      );
 }

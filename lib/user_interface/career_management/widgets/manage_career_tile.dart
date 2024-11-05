@@ -1,6 +1,5 @@
 import 'package:adams_county_scheduler/logical_interface/bloc/careers/careers_bloc.dart';
 import 'package:adams_county_scheduler/objects/career.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
