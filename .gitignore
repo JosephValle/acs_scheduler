@@ -44,3 +44,11 @@ app.*.map.json
 /android/app/release
 /ios/Podfile.lock
 /pubspec.lock
+/lib/objects/career.g.dart
+/lib/objects/career_priority.g.dart
+/lib/objects/profile.g.dart
+/lib/objects/room.g.dart
+/lib/objects/school.g.dart
+/lib/objects/session.g.dart
+/lib/objects/student.g.dart
+/lib/objects/time_session.g.dart
