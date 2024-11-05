@@ -97,7 +97,7 @@ class SignInPage extends StatelessWidget {
                 TextButton(
                   onPressed: () => showDialog(
                       context: context,
-                      builder: (context) => ResetPasswordDialog()),
+                      builder: (context) => ResetPasswordDialog(),),
                   child: const Text(
                     'Reset Password',
                   ),
