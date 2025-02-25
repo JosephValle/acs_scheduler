@@ -23,7 +23,7 @@ class SchedulerApiClient {
     required String session,
   }) async {
     final DocumentReference ref =
-        await _firestore.collection(sessionsCollection).add({
+    await _firestore.collection(sessionsCollection).add({
       'time': Timestamp.fromDate(time),
       'session': session,
     });
@@ -50,9 +50,9 @@ class SchedulerApiClient {
     return querySnapshot.docs
         .map(
           (doc) => TimeSession.fromJson(
-            doc.data() as Map<String, dynamic>,
-          ),
-        ) // Assign the document ID to the TimeSession id field
+        doc.data() as Map<String, dynamic>,
+      ),
+    ) // Assign the document ID to the TimeSession id field
         .toList();
   }
 
@@ -209,7 +209,7 @@ class SchedulerApiClient {
       );
       final String masterFileName = 'Student Schedules - $time.docx';
       final String masterUploadResult =
-          await uploadFile(masterDocBytes, masterFileName);
+      await uploadFile(masterDocBytes, masterFileName);
 
       for (final school in schoolContents.keys) {
         final Content schoolContent = Content();
@@ -248,7 +248,7 @@ class SchedulerApiClient {
           if (students.isEmpty) continue;
           final TimeSession time = times[i];
           students.sort(
-            (a, b) => '${a.lastName}, ${a.firstName}'
+                (a, b) => '${a.lastName}, ${a.firstName}'
                 .compareTo('${b.lastName}, ${b.firstName}'),
           );
           final List<RowContent> rows = [];

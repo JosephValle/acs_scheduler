@@ -347,6 +347,9 @@ class ScheduleRepository extends BaseScheduleRepository {
 
     // Calculate demand for each career based on student preferences
     for (final Student student in students) {
+      if(student.lastName == 'Acevedo') {
+        print("Found Acevedo");
+      }
       for (int i = 0; i < 5; i++) {
         final int careerId = getCareerId(index: i, student: student);
         careerDemand[careerId.toString()] =
