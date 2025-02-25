@@ -13,6 +13,6 @@ ColorScheme darkColorScheme = ColorScheme(
   onSecondary: Colors.black,
   error: Colors.red,
   onError: Colors.white,
-  surface: Colors.grey.withOpacity(.4),
+  surface: Colors.grey.withValues(alpha: .4),
   onSurface: Colors.white,
 );

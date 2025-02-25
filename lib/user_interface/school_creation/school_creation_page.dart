@@ -231,7 +231,7 @@ class _SchoolCreationPageState extends State<SchoolCreationPage> {
                       }
                     },
                     backgroundColor: ACColors.secondaryColor
-                        .withOpacity(uploadProgress > 0 ? .4 : 1),
+                        .withValues(alpha: uploadProgress > 0 ? .4 : 1),
                     child: Text(
                       uploadProgress > 0 ? 'Uploading Image' : 'Create School',
                       style: TextStyle(

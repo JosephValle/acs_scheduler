@@ -12,8 +12,8 @@ environment:
 dependencies:
   app_links: ^6.3.2
   archive: ^3.5.0
-  auto_size_text: ^3.0.0
   app_tracking_transparency: ^2.0.4
+  auto_size_text: ^3.0.0
   bloc: ^9.0.0
   cloud_firestore: ^5.4.4
   cloud_functions: ^5.1.3

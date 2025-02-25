@@ -47,7 +47,7 @@ class _SchedulerPageState extends State<SchedulerPage> {
               ),
               if (state is SchedulerLoading)
                 ColoredBox(
-                  color: Colors.grey.withOpacity(.25),
+                  color: Colors.grey.withValues(alpha: .25),
                   child: const Center(child: CircularProgressIndicator()),
                 ),
             ],
@@ -154,7 +154,7 @@ class _SchedulerPageState extends State<SchedulerPage> {
             borderRadius: BorderRadius.circular(25),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
+                color: Colors.grey.withValues(alpha: 0.5),
                 spreadRadius: 2,
                 blurRadius: 7,
                 offset: const Offset(0, 3), // changes position of shadow

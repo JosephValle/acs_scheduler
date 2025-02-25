@@ -8,7 +8,8 @@ class LightTabBarTheme extends TabBarTheme {
   Color? get labelColor => ACColors.secondaryColor;
 
   @override
-  Color? get unselectedLabelColor => ACColors.primaryColor.withOpacity(.4);
+  Color? get unselectedLabelColor =>
+      ACColors.primaryColor.withValues(alpha: .4);
 
   @override
   Color? get indicatorColor => ACColors.primaryColor;
@@ -24,7 +25,8 @@ class DarkTabBarTheme extends TabBarTheme {
   Color? get labelColor => ACColors.primaryColor;
 
   @override
-  Color? get unselectedLabelColor => ACColors.secondaryColor.withOpacity(.4);
+  Color? get unselectedLabelColor =>
+      ACColors.secondaryColor.withValues(alpha: .4);
 
   @override
   Color? get indicatorColor => ACColors.secondaryColor;

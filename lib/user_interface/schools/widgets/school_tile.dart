@@ -80,11 +80,11 @@ class _SchoolTileState extends State<SchoolTile> {
                                 Theme.of(context)
                                     .colorScheme
                                     .surface
-                                    .withOpacity(0.0),
+                                    .withValues(alpha: 0.0),
                                 Theme.of(context)
                                     .colorScheme
                                     .surface
-                                    .withOpacity(.7),
+                                    .withValues(alpha: .7),
                               ],
                               stops: const [
                                 0.0,
@@ -122,7 +122,7 @@ class _SchoolTileState extends State<SchoolTile> {
                               color: Theme.of(context)
                                   .colorScheme
                                   .surface
-                                  .withOpacity(.7),
+                                  .withValues(alpha: .7),
                             ),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
