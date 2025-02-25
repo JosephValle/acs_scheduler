@@ -39,7 +39,7 @@ class Career extends HiveObject {
   final List<String> speakers;
 
   @HiveField(4)
-  @JsonKey(defaultValue: Session.Both)
+  @JsonKey(defaultValue: Session.both)
   Session session;
 
   @HiveField(5)

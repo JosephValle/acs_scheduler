@@ -162,7 +162,7 @@ class SchedulerApiClient {
       final List<PlainContent> masterPlainContentList = [];
       final Map<String, List<PlainContent>> schoolContents = {};
 
-      print("There are ${schedules.length} schedules");
+      print('There are ${schedules.length} schedules');
 
       // Process each schedule.
       for (final ExportStudentSchedule schedule in schedules) {
@@ -212,7 +212,8 @@ class SchedulerApiClient {
       masterContent.add(ListContent('plainlist', masterPlainContentList));
 
       // Load the DOCX template for the master document.
-      final ByteData masterData = await rootBundle.load('assets/templates/student_schedule_template.docx');
+      final ByteData masterData = await rootBundle
+          .load('assets/templates/student_schedule_template.docx');
       final Uint8List masterBytes = masterData.buffer.asUint8List();
       final docxTemplateMaster = await DocxTemplate.fromBytes(masterBytes);
 
@@ -221,12 +222,14 @@ class SchedulerApiClient {
         (await docxTemplateMaster.generate(masterContent))!,
       );
       final String masterFileName = 'Student Schedules - $time.docx';
-      final String masterUploadResult = await uploadFile(masterDocBytes, masterFileName);
+      final String masterUploadResult =
+          await uploadFile(masterDocBytes, masterFileName);
 
       // Generate a separate document for each school.
       for (final school in schoolContents.keys) {
         // Reload a fresh copy of the template for each school document.
-        final ByteData schoolData = await rootBundle.load('assets/templates/student_schedule_template.docx');
+        final ByteData schoolData = await rootBundle
+            .load('assets/templates/student_schedule_template.docx');
         final Uint8List schoolBytes = schoolData.buffer.asUint8List();
         final docxTemplateSchool = await DocxTemplate.fromBytes(schoolBytes);
 
@@ -245,7 +248,6 @@ class SchedulerApiClient {
       rethrow;
     }
   }
-
 
   Future<String> createAttendanceSchedule({
     required List<ExportCareerSchedule> careerSessions,

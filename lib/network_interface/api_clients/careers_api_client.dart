@@ -38,7 +38,7 @@ class CareersApiClient {
       name: name,
       category: category,
       speakers: speakers,
-      session: Session.Both,
+      session: Session.both,
       excelNum: excelNum,
       room: room,
       maxClassSize: maxClassSize,

@@ -21,6 +21,11 @@ dependencies:
   collection: ^1.18.0 # For collection manipulation
   cupertino_icons: ^1.0.2 # For cupertino icons
   dev: ^1.0.0 # For development
+  dio: ^5.0.3 # For http requests
+  docx_template: # For docx coversions
+    git:
+      url: https://github.com/hunterwilhelm/docx_template_dart.git
+      commit: 8947449
   firebase_analytics: ^11.3.3 # For firebase analytics
   firebase_core: ^3.6.0 # For firebase core
   firebase_messaging: ^15.1.3 # For firebase messaging
@@ -30,21 +35,17 @@ dependencies:
   flutter_bloc: ^9.0.0 # For state management
   flutter_local_notifications: ^18.0.0 # For local notifications
   flutter_svg: ^2.0.9 # For svg images
-  intl: ^0.20.2 # For internationalization
-  hive: ^2.2.3 # For local storage
-  hive_flutter: ^1.1.0 # For local storage
+
   file_picker: ^9.0.1 # For file picking
   firebase_auth: ^5.3.1 # For firebase authentication
   flutter_excel: ^1.0.1 # For excel files
   flutter_phoenix: ^1.1.0 # For hot reload
   fluttertoast: ^8.2.1 # For toast messages
   google_sign_in: ^6.1.6 # For google sign in
+  hive: ^2.2.3 # For local storage
+  hive_flutter: ^1.1.0 # For local storage
+  intl: ^0.20.2 # For internationalization
   retrofit: ^4.0.1 # For http requests
-  dio: ^5.0.3 # For http requests
-  docx_template: # For docx coversions
-    git:
-      url: https://github.com/hunterwilhelm/docx_template_dart.git
-      commit: 8947449
   icons_launcher: ^3.0.0 # For app icons
   image_picker: ^1.0.5 # For image picking
   json_annotation: ^4.8.1 # For json serialization

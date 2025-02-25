@@ -7,11 +7,11 @@ part 'session.g.dart';
 enum Session {
   @JsonValue('am')
   @HiveField(0)
-  AM,
+  am,
   @JsonValue('pm')
   @HiveField(1)
-  PM,
+  pm,
   @JsonValue('both')
   @HiveField(2)
-  Both,
+  both,
 }
