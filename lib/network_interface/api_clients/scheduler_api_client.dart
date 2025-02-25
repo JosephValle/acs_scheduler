@@ -22,7 +22,7 @@ class SchedulerApiClient {
     required DateTime time,
     required String session,
   }) async {
-    DocumentReference ref =
+    final DocumentReference ref =
         await _firestore.collection(sessionsCollection).add({
       'time': Timestamp.fromDate(time),
       'session': session,
@@ -42,7 +42,7 @@ class SchedulerApiClient {
   }
 
   Future<List<TimeSession>> getAllSessions() async {
-    QuerySnapshot querySnapshot = await _firestore
+    final QuerySnapshot querySnapshot = await _firestore
         .collection(sessionsCollection)
         .orderBy('time', descending: false) // Order by time in ascending order
         .get();
@@ -58,11 +58,11 @@ class SchedulerApiClient {
 
   Future<List<ReportLink>> getAllReports() async {
     const String directory = 'reports';
-    List<ReportLink> reportLinks = [];
-    Reference dirRef = storage.ref(directory);
-    ListResult result = await dirRef.listAll();
-    for (var ref in result.items) {
-      String url = await ref.getDownloadURL();
+    final List<ReportLink> reportLinks = [];
+    final Reference dirRef = storage.ref(directory);
+    final ListResult result = await dirRef.listAll();
+    for (final ref in result.items) {
+      final String url = await ref.getDownloadURL();
       reportLinks.add(ReportLink(filename: ref.name, downloadUrl: url));
     }
     return reportLinks;
@@ -73,12 +73,12 @@ class SchedulerApiClient {
     required String time,
   }) async {
     try {
-      var excel = Excel.createExcel(); // Create an Excel document
+      final excel = Excel.createExcel(); // Create an Excel document
       careers.sort((a, b) => a.career.compareTo(b.career));
-      Sheet sheetObject = excel['Sheet1']; // Accessing sheet
+      final Sheet sheetObject = excel['Sheet1']; // Accessing sheet
 
       // Create the headers
-      List<String> headers = [
+      final List<String> headers = [
         'Id',
         'Name',
         'Room',
@@ -89,15 +89,15 @@ class SchedulerApiClient {
       sheetObject.appendRow(headers);
 
       // Iterate over the schedules and fill the data
-      for (var career in careers) {
-        List<dynamic> row = [
+      for (final career in careers) {
+        final List<dynamic> row = [
           career.excelId,
           career.career,
           career.room,
         ];
 
         // Assuming there are always 3 sessions
-        for (int session in career.sessionCounts) {
+        for (final int session in career.sessionCounts) {
           row.add(session);
         }
 
@@ -105,8 +105,8 @@ class SchedulerApiClient {
       }
 
       // Save the Excel file
-      Uint8List fileBytes = Uint8List.fromList(excel.encode()!);
-      String fileName = 'Career Counts List - $time.xlsx';
+      final Uint8List fileBytes = Uint8List.fromList(excel.encode()!);
+      final String fileName = 'Career Counts List - $time.xlsx';
 
       return await uploadFile(fileBytes, fileName);
     } catch (e) {
@@ -118,11 +118,11 @@ class SchedulerApiClient {
     required List<ExportStudentSchedule> schedules,
     required String time,
   }) async {
-    var excel = Excel.createExcel(); // Create an Excel document
-    Sheet sheetObject = excel['Sheet1']; // Accessing sheet
+    final excel = Excel.createExcel(); // Create an Excel document
+    final Sheet sheetObject = excel['Sheet1']; // Accessing sheet
 
     // Create the headers
-    List<String> headers = [
+    final List<String> headers = [
       'School',
       'Name',
       'Session 1',
@@ -132,14 +132,14 @@ class SchedulerApiClient {
     sheetObject.appendRow(headers);
 
     // Iterate over the schedules and fill the data
-    for (var schedule in schedules) {
-      List<String> row = [
+    for (final schedule in schedules) {
+      final List<String> row = [
         schedule.school,
         schedule.formattedName,
       ];
 
       // Assuming there are always 3 sessions
-      for (var session in schedule.sessions) {
+      for (final session in schedule.sessions) {
         row.add(session.careerName);
       }
 
@@ -147,8 +147,8 @@ class SchedulerApiClient {
     }
 
     // Save the Excel file
-    Uint8List fileBytes = Uint8List.fromList(excel.encode()!);
-    String fileName = 'Master List - $time.xlsx';
+    final Uint8List fileBytes = Uint8List.fromList(excel.encode()!);
+    final String fileName = 'Master List - $time.xlsx';
 
     return await uploadFile(fileBytes, fileName);
   }
@@ -159,23 +159,23 @@ class SchedulerApiClient {
   }) async {
     try {
       // Initialize content for the master document
-      Content masterContent = Content();
+      final Content masterContent = Content();
 
       // Map to hold content for each school
-      Map<String, List<PlainContent>> schoolContents = {};
+      final Map<String, List<PlainContent>> schoolContents = {};
 
-      for (ExportStudentSchedule schedule in schedules) {
-        List<RowContent> rows = [];
+      for (final ExportStudentSchedule schedule in schedules) {
+        final List<RowContent> rows = [];
 
         // Sort sessions based on time
         schedule.sessions.sort((a, b) {
-          DateFormat dateFormat = DateFormat('hh:mm a');
-          DateTime timeA = dateFormat.parse(a.time);
-          DateTime timeB = dateFormat.parse(b.time);
+          final DateFormat dateFormat = DateFormat('hh:mm a');
+          final DateTime timeA = dateFormat.parse(a.time);
+          final DateTime timeB = dateFormat.parse(b.time);
           return timeA.compareTo(timeB);
         });
 
-        for (var session in schedule.sessions) {
+        for (final session in schedule.sessions) {
           rows.add(
             RowContent()
               ..add(TextContent('key1', session.time))
@@ -184,7 +184,7 @@ class SchedulerApiClient {
           );
         }
 
-        PlainContent plainContent = PlainContent('plainview')
+        final PlainContent plainContent = PlainContent('plainview')
           ..add(TextContent('school', schedule.school))
           ..add(TextContent('student', schedule.formattedName))
           ..add(TableContent('table', rows));
@@ -211,8 +211,8 @@ class SchedulerApiClient {
       final String masterUploadResult =
           await uploadFile(masterDocBytes, masterFileName);
 
-      for (var school in schoolContents.keys) {
-        Content schoolContent = Content();
+      for (final school in schoolContents.keys) {
+        final Content schoolContent = Content();
         schoolContent.add(ListContent('plainlist', schoolContents[school]!));
 
         final Uint8List schoolDocBytes = Uint8List.fromList(
@@ -239,10 +239,10 @@ class SchedulerApiClient {
       final Uint8List bytes = data.buffer.asUint8List();
       final docx = await DocxTemplate.fromBytes(bytes);
       careerSessions.sort((a, b) => a.career.compareTo(b.career));
-      Content c = Content();
-      List<Content> plainContents = [];
+      final Content c = Content();
+      final List<Content> plainContents = [];
 
-      for (ExportCareerSchedule session in careerSessions) {
+      for (final ExportCareerSchedule session in careerSessions) {
         for (int i = 0; i < times.length; i++) {
           final List<Student> students = session.students[i];
           if (students.isEmpty) continue;
@@ -251,7 +251,7 @@ class SchedulerApiClient {
             (a, b) => '${a.lastName}, ${a.firstName}'
                 .compareTo('${b.lastName}, ${b.firstName}'),
           );
-          List<RowContent> rows = [];
+          final List<RowContent> rows = [];
           // Handles up to 65 students in one class while also
           // Exporting the documents all on one sheet
           const int increment = 25;

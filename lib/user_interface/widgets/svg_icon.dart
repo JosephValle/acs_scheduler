@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 /// This is a resuable widget for displaying SVGS
 ///
 /// [name] is the name of the svg. If the file is .../assets/svg/image1.svg you can pass image1
@@ -14,8 +13,12 @@ class SvgIcon extends StatelessWidget {
   final Color? color;
   final double? size;
 
-  const SvgIcon(
-      {super.key, this.size, required this.name, required this.color,});
+  const SvgIcon({
+    super.key,
+    this.size,
+    required this.name,
+    required this.color,
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -26,9 +26,12 @@ class AuthRepository implements BaseAuthRepository {
   }
 
   @override
-  Future<Profile?> signIn({required String email, required String password}) async {
+  Future<Profile?> signIn({
+    required String email,
+    required String password,
+  }) async {
     try {
-      return await _authApiClient.signIn( email: email, password: password);
+      return await _authApiClient.signIn(email: email, password: password);
     } catch (e) {
       debugPrint('sign in error $e');
       return null;
@@ -36,10 +39,10 @@ class AuthRepository implements BaseAuthRepository {
   }
 
   @override
-  Future<void> signOut() async{
+  Future<void> signOut() async {
     try {
       await _authApiClient.signOut();
-    }catch(e){
+    } catch (e) {
       debugPrint('sign out error $e');
     }
   }

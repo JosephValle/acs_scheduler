@@ -33,8 +33,14 @@ class SchoolDetailBloc extends Bloc<SchoolDetailEvent, SchoolDetailState> {
     required StudentsRepository studentsRepository,
   })  : _schoolDetailRepository = schoolDetailRepository,
         _studentsRepository = studentsRepository,
-        super(const SchoolDetailInitial(
-            students: [], rooms: [], careers: [], schoolId: '',),) {
+        super(
+          const SchoolDetailInitial(
+            students: [],
+            rooms: [],
+            careers: [],
+            schoolId: '',
+          ),
+        ) {
     on<LoadSchoolDetails>(_mapLoadSchoolDetailsToState);
     on<RemoveCareer>(_mapRemoveCareerFromSchoolToState);
     on<AddCareer>(_mapAddCareerToSchoolToState);
@@ -45,76 +51,105 @@ class SchoolDetailBloc extends Bloc<SchoolDetailEvent, SchoolDetailState> {
   void _mapAddStudentToState(AddStudent event, emit) {
     students.add(event.student);
 
-    students.sort((a, b) => ('${a.lastName}, ${a.firstName}')
-        .compareTo(('${b.lastName}, ${b.firstName}')),);
-    emit(SchoolInformationLoaded(
+    students.sort(
+      (a, b) => '${a.lastName}, ${a.firstName}'
+          .compareTo('${b.lastName}, ${b.firstName}'),
+    );
+    emit(
+      SchoolInformationLoaded(
         careers: careers,
         rooms: rooms,
         students: students,
-        schoolId: event.schoolId,),);
+        schoolId: event.schoolId,
+      ),
+    );
   }
 
-  void _mapAddRoomToState(AddRoom event, emit) async {
-    Room room = await _schoolDetailRepository.createRoom(
-        schoolId: event.schoolId,
-        name: event.name,
-        building: event.building,
-        maxSize: event.maxSize,
-        minSize: event.minSize,);
+  Future<void> _mapAddRoomToState(AddRoom event, emit) async {
+    final Room room = await _schoolDetailRepository.createRoom(
+      schoolId: event.schoolId,
+      name: event.name,
+      building: event.building,
+      maxSize: event.maxSize,
+      minSize: event.minSize,
+    );
 
     rooms.add(room);
-    emit(SchoolRoomsAdded(
+    emit(
+      SchoolRoomsAdded(
         careers: careers,
         rooms: rooms,
         students: students,
-        schoolId: event.schoolId,),);
+        schoolId: event.schoolId,
+      ),
+    );
   }
 
-  void _mapLoadSchoolDetailsToState(LoadSchoolDetails event, emit) async {
-    emit(SchoolInformationLoading(
+  Future<void> _mapLoadSchoolDetailsToState(
+    LoadSchoolDetails event,
+    emit,
+  ) async {
+    emit(
+      SchoolInformationLoading(
         careers: careers,
         rooms: rooms,
         students: students,
-        schoolId: event.schoolId,),);
+        schoolId: event.schoolId,
+      ),
+    );
     careers =
         await _schoolDetailRepository.loadCareers(schoolId: event.schoolId);
     rooms = await _schoolDetailRepository.loadRooms(schoolId: event.schoolId);
     students =
         await _studentsRepository.getStudentBySchool(schoolId: event.schoolId);
 
-    students.sort((a, b) => ('${a.lastName}, ${a.firstName}')
-        .compareTo(('${b.lastName}, ${b.firstName}')),);
+    students.sort(
+      (a, b) => '${a.lastName}, ${a.firstName}'
+          .compareTo('${b.lastName}, ${b.firstName}'),
+    );
     rooms.sort((a, b) => a.name.compareTo(b.name));
     careers.sort((a, b) => a.name.compareTo(b.name));
-    emit(SchoolInformationLoaded(
+    emit(
+      SchoolInformationLoaded(
         careers: careers,
         rooms: rooms,
         students: students,
-        schoolId: event.schoolId,),);
+        schoolId: event.schoolId,
+      ),
+    );
   }
 
-  void _mapAddCareerToSchoolToState(AddCareer event, emit) async {
+  Future<void> _mapAddCareerToSchoolToState(AddCareer event, emit) async {
     careers.add(event.career);
 
     careers.sort((a, b) => a.name.compareTo(b.name));
-    emit(SchoolInformationLoaded(
+    emit(
+      SchoolInformationLoaded(
         careers: careers,
         rooms: rooms,
         students: students,
-        schoolId: event.schoolId,),);
+        schoolId: event.schoolId,
+      ),
+    );
   }
 
-  void _mapRemoveCareerFromSchoolToState(RemoveCareer event, emit) async {
+  Future<void> _mapRemoveCareerFromSchoolToState(
+    RemoveCareer event,
+    emit,
+  ) async {
     if (careers.any((element) => element.id == event.careerId)) {
       careers.removeWhere((element) => element.id == event.careerId);
     }
 
     careers.sort((a, b) => a.name.compareTo(b.name));
 
-    emit(SchoolInformationLoaded(
+    emit(
+      SchoolInformationLoaded(
         careers: careers,
         rooms: rooms,
         students: students,
-        schoolId: event.schoolId,),);
+        schoolId: event.schoolId,
+      ),
+    );
   }
 }

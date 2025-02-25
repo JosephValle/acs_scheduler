@@ -82,9 +82,9 @@ class _CareerCreationPageState extends State<CareerCreationPage> {
                       label: 'Max Class Size',
                       keyboardType: TextInputType.number,
                       validator: (value) {
-                        int? minSize =
+                        final int? minSize =
                             int.tryParse(_minClassSizeController.text.trim());
-                        int? maxSize = int.tryParse(value ?? '');
+                        final int? maxSize = int.tryParse(value ?? '');
                         if (value == null ||
                             value.isEmpty ||
                             maxSize == null ||
@@ -207,45 +207,43 @@ class _CareerCreationPageState extends State<CareerCreationPage> {
                   cursor: SystemMouseCursors.click,
                   child: ColoredContainer(
                     onTap: () {
-                      int? excelNum =
+                      final int? excelNum =
                           int.tryParse(_excelNumController.text.trim());
-                      int? minClassSize =
+                      final int? minClassSize =
                           int.tryParse(_minClassSizeController.text.trim());
-                      int? maxClassSize =
+                      final int? maxClassSize =
                           int.tryParse(_maxClassSizeController.text.trim());
 
                       if (excelNum != null &&
                           minClassSize != null &&
                           maxClassSize != null &&
                           maxClassSize >= minClassSize) {
-
                         if (widget.career != null) {
                           context.read<CareersBloc>().add(
-                            UpdateCareer(
-                              career: widget.career!.copyWith(
-                                name: _nameController.text.trim(),
-                                category: _categoryController.text.trim(),
-                                speakers: speakers,
-                                excelNum: excelNum,
-                                room: _roomController.text.trim(),
-                                maxClassSize: maxClassSize,
-                                minClassSize: minClassSize,
-                              ),
-                            ),
-                          );
-
+                                UpdateCareer(
+                                  career: widget.career!.copyWith(
+                                    name: _nameController.text.trim(),
+                                    category: _categoryController.text.trim(),
+                                    speakers: speakers,
+                                    excelNum: excelNum,
+                                    room: _roomController.text.trim(),
+                                    maxClassSize: maxClassSize,
+                                    minClassSize: minClassSize,
+                                  ),
+                                ),
+                              );
                         } else {
                           context.read<CareersBloc>().add(
-                            CreateCareer(
-                              name: _nameController.text.trim(),
-                              category: _categoryController.text.trim(),
-                              speakers: speakers,
-                              excelNum: excelNum,
-                              room: _roomController.text.trim(),
-                              maxClassSize: maxClassSize,
-                              minClassSize: minClassSize,
-                            ),
-                          );
+                                CreateCareer(
+                                  name: _nameController.text.trim(),
+                                  category: _categoryController.text.trim(),
+                                  speakers: speakers,
+                                  excelNum: excelNum,
+                                  room: _roomController.text.trim(),
+                                  maxClassSize: maxClassSize,
+                                  minClassSize: minClassSize,
+                                ),
+                              );
                         }
                       }
                     },

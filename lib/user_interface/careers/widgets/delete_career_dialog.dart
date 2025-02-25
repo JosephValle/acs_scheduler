@@ -14,40 +14,43 @@ class DeleteCareerDialog extends StatelessWidget {
     return AlertDialog(
       contentPadding: const EdgeInsets.all(8.0),
       content: SizedBox(
-          width: 350,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Are you sure you want to delete ${career.name}?',
-                  style: Theme.of(context).textTheme.titleLarge,
-                  textAlign: TextAlign.center,
-                ),
+        width: 350,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Are you sure you want to delete ${career.name}?',
+                style: Theme.of(context).textTheme.titleLarge,
+                textAlign: TextAlign.center,
               ),
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                  'This cannot be undone',
-                ),
+            ),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text(
+                'This cannot be undone',
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text('Cancel'),),
-                    TextButton(
-                        onPressed: () => _handleDelete(context),
-                        child: const Text('DELETE'),),
-                  ],
-                ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('Cancel'),
+                  ),
+                  TextButton(
+                    onPressed: () => _handleDelete(context),
+                    child: const Text('DELETE'),
+                  ),
+                ],
               ),
-            ],
-          ),),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

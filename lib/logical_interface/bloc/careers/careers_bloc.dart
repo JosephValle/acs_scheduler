@@ -27,7 +27,7 @@ class CareersBloc extends Bloc<CareersEvent, CareersState> {
     on<UpdateCareer>(_updateCareer);
   }
 
-  void _mapSetCareerSessionForSchoolToState(
+  Future<void> _mapSetCareerSessionForSchoolToState(
     SetCareerSessionForSchool event,
     emit,
   ) async {
@@ -37,7 +37,7 @@ class CareersBloc extends Bloc<CareersEvent, CareersState> {
       session: event.session,
     );
 
-    for (Career career
+    for (final Career career
         in careers.where((element) => element.id == event.careerId)) {
       career.session = event.session;
     }
@@ -46,8 +46,8 @@ class CareersBloc extends Bloc<CareersEvent, CareersState> {
     emit(CareersLoaded(careers: careers));
   }
 
-  void _mapCreateCareerToState(CreateCareer event, emit) async {
-    Career career = await _careersRepository.createCareer(
+  Future<void> _mapCreateCareerToState(CreateCareer event, emit) async {
+    final Career career = await _careersRepository.createCareer(
       name: event.name,
       category: event.category,
       speakers: event.speakers,
@@ -64,18 +64,18 @@ class CareersBloc extends Bloc<CareersEvent, CareersState> {
     emit(CareerCreated(careers: careers));
   }
 
-  void _mapLoadCareersToState(LoadCareers event, emit) async {
+  Future<void> _mapLoadCareersToState(LoadCareers event, emit) async {
     careers = await _careersRepository.loadCareers();
 
     careers.sort((a, b) => a.name.compareTo(b.name));
     emit(CareersLoaded(careers: careers));
   }
 
-  void _mapCheckCareerExistsForSchoolToState(
+  Future<void> _mapCheckCareerExistsForSchoolToState(
     CheckCareerExistsForSchool event,
     emit,
   ) async {
-    bool exists = await _careersRepository.checkCareerAddedToSchool(
+    final bool exists = await _careersRepository.checkCareerAddedToSchool(
       schoolId: event.schoolId,
       careerId: event.careerId,
     );
@@ -90,7 +90,10 @@ class CareersBloc extends Bloc<CareersEvent, CareersState> {
     );
   }
 
-  void _mapAddCareerToSchoolToState(AddCareerToSchool event, emit) async {
+  Future<void> _mapAddCareerToSchoolToState(
+    AddCareerToSchool event,
+    emit,
+  ) async {
     await _careersRepository.addCareerToSchool(
       schoolId: event.schoolId,
       career: event.career,
@@ -104,7 +107,7 @@ class CareersBloc extends Bloc<CareersEvent, CareersState> {
     );
   }
 
-  void _mapRemoveCareerFromSchoolToState(
+  Future<void> _mapRemoveCareerFromSchoolToState(
     RemoveCareerFromSchool event,
     emit,
   ) async {
@@ -121,7 +124,7 @@ class CareersBloc extends Bloc<CareersEvent, CareersState> {
     );
   }
 
-  void _deleteCareer(
+  Future<void> _deleteCareer(
     DeleteCareer event,
     emit,
   ) async {
@@ -130,7 +133,7 @@ class CareersBloc extends Bloc<CareersEvent, CareersState> {
     emit(CareersLoaded(careers: careers));
   }
 
-  void _updateCareer(
+  Future<void> _updateCareer(
     UpdateCareer event,
     emit,
   ) async {

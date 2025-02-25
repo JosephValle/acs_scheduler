@@ -37,43 +37,51 @@ class StudentsBloc extends Bloc<StudentsEvent, StudentsState> {
     on<ClearAllStudents>(_clearAllStudents);
   }
 
-  void _mapBulkUploadStudentsToState(BulkUploadStudents event, emit) async {
+  Future<void> _mapBulkUploadStudentsToState(
+    BulkUploadStudents event,
+    emit,
+  ) async {
     emit(BulkUploadStarted(students: students));
-    List<String> errors = [];
-    List<Data?> headers = event.sheet.row(0);
+    final List<String> errors = [];
+    final List<Data?> headers = event.sheet.row(0);
 
-    List<String> headerValues = headers
+    final List<String> headerValues = headers
         .map<String>((e) => e?.value.toString().toLowerCase() ?? '')
         .toList();
 
-    List<int> indexes = [];
+    final List<int> indexes = [];
 
-    for (var cell in cells) {
+    for (final cell in cells) {
       indexes.add(headerValues.indexOf(cell));
     }
 
-    Map<String, String> schoolsMapping = {};
+    final Map<String, String> schoolsMapping = {};
 
-    for (var data in event.sheet.rows.sublist(1)) {
-      String firstName = data[indexes[0]]!.value.toString();
+    for (final data in event.sheet.rows.sublist(1)) {
+      final String firstName = data[indexes[0]]!.value.toString();
 
-      String lastName = data[indexes[1]]!.value.toString();
+      final String lastName = data[indexes[1]]!.value.toString();
 
-      String school = data[indexes[2]]!.value.toString();
+      final String school = data[indexes[2]]!.value.toString();
 
-      String firstChoice = data[indexes[3]]?.value.toString() ?? 1.toString();
+      final String firstChoice =
+          data[indexes[3]]?.value.toString() ?? 1.toString();
 
-      String secondChoice = data[indexes[4]]?.value.toString() ?? 1.toString();
+      final String secondChoice =
+          data[indexes[4]]?.value.toString() ?? 1.toString();
 
-      String thirdChoice = data[indexes[5]]?.value.toString() ?? 1.toString();
+      final String thirdChoice =
+          data[indexes[5]]?.value.toString() ?? 1.toString();
 
-      String fourthChoice = data[indexes[6]]?.value.toString() ?? 1.toString();
+      final String fourthChoice =
+          data[indexes[6]]?.value.toString() ?? 1.toString();
 
-      String fifthChoice = data[indexes[7]]?.value.toString() ?? 1.toString();
+      final String fifthChoice =
+          data[indexes[7]]?.value.toString() ?? 1.toString();
 
-      String? schoolIdFromMap = schoolsMapping[school];
+      final String? schoolIdFromMap = schoolsMapping[school];
 
-      String? schoolId = schoolIdFromMap ??
+      final String? schoolId = schoolIdFromMap ??
           await _studentsRepository.getSchoolIdByName(schoolName: school);
 
       if (schoolId != null) {
@@ -81,7 +89,7 @@ class StudentsBloc extends Bloc<StudentsEvent, StudentsState> {
           schoolsMapping[school] = schoolId;
         }
 
-        Student student = await _studentsRepository.createStudent(
+        final Student student = await _studentsRepository.createStudent(
           firstName: firstName,
           lastName: lastName,
           careerPriority: CareerPriority(
@@ -103,25 +111,25 @@ class StudentsBloc extends Bloc<StudentsEvent, StudentsState> {
     }
 
     students.sort(
-      (a, b) => ('${a.lastName}, ${a.firstName}')
-          .compareTo(('${b.lastName}, ${b.firstName}')),
+      (a, b) => '${a.lastName}, ${a.firstName}'
+          .compareTo('${b.lastName}, ${b.firstName}'),
     );
     emit(UploadFinished(errors: errors, students: students));
   }
 
-  void _mapLostStudentsToState(LoadStudents event, emit) async {
+  Future<void> _mapLostStudentsToState(LoadStudents event, emit) async {
     students = await _studentsRepository.getStudents();
 
     students.sort(
-      (a, b) => ('${a.lastName}, ${a.firstName}')
-          .compareTo(('${b.lastName}, ${b.firstName}')),
+      (a, b) => '${a.lastName}, ${a.firstName}'
+          .compareTo('${b.lastName}, ${b.firstName}'),
     );
 
     emit(StudentsLoaded(students: students));
   }
 
-  void _mapCreateStudentToState(EditStudent event, emit) async {
-    Student student = await _studentsRepository.editStudent(
+  Future<void> _mapCreateStudentToState(EditStudent event, emit) async {
+    final Student student = await _studentsRepository.editStudent(
       firstName: event.firstName,
       lastName: event.lastName,
       careerPriority: event.priority,
@@ -134,14 +142,14 @@ class StudentsBloc extends Bloc<StudentsEvent, StudentsState> {
     students.add(student);
 
     students.sort(
-      (a, b) => ('${a.lastName}, ${a.firstName}')
-          .compareTo(('${b.lastName}, ${b.firstName}')),
+      (a, b) => '${a.lastName}, ${a.firstName}'
+          .compareTo('${b.lastName}, ${b.firstName}'),
     );
 
     emit(StudentCreated(students: students));
   }
 
-  void _clearAllStudents(ClearAllStudents event, emit) async {
+  Future<void> _clearAllStudents(ClearAllStudents event, emit) async {
     await _studentsRepository.clearAllStudents();
 
     students = [];
@@ -152,7 +160,7 @@ class StudentsBloc extends Bloc<StudentsEvent, StudentsState> {
     emit(StudentsLoaded(students: students));
   }
 
-  void _mapSortStudentsToState(SortStudents event, emit) async {
+  Future<void> _mapSortStudentsToState(SortStudents event, emit) async {
     switch (event.index) {
       case 0:
         {

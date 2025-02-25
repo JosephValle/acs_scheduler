@@ -46,7 +46,7 @@ class _StudentCreationPageState extends State<StudentCreationPage> {
   @override
   void initState() {
     school = context.read<SchoolsBloc>().schools.first;
-    Student? student = widget.student;
+    final Student? student = widget.student;
     if (student != null) {
       _firstNameController.text = student.firstName;
       _lastNameController.text = student.lastName;

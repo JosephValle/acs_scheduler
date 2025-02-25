@@ -21,7 +21,8 @@ class SchoolsApiClient {
     required String category,
     required String time,
   }) async {
-    DocumentReference ref = await _firestore.collection(schoolsCollection).add({
+    final DocumentReference ref =
+        await _firestore.collection(schoolsCollection).add({
       'name': schoolName,
       'shortName': shortSchoolName,
       'category': category,
@@ -44,7 +45,8 @@ class SchoolsApiClient {
       classroomCount: 0,
       shortName: shortSchoolName,
       studentCount: 0,
-      time: time,);
+      time: time,
+    );
   }
 
   Future<void> uploadSchoolImage({
@@ -53,18 +55,19 @@ class SchoolsApiClient {
     required Function(double progress) onProgress,
     required Function(String downloadUrl) onFinished,
   }) async {
-    Reference ref = _storage.ref('$schoolsCollection/header_images/').child(
-      "${schoolShortName}_header_image.${image.mimeType!.split("/").last}",
-    );
+    final Reference ref =
+        _storage.ref('$schoolsCollection/header_images/').child(
+              "${schoolShortName}_header_image.${image.mimeType!.split("/").last}",
+            );
 
-    UploadTask task = ref.putData(
+    final UploadTask task = ref.putData(
       await image.readAsBytes(),
       SettableMetadata(contentType: image.mimeType),
     );
 
     task.asStream().listen((event) async {
-      double progress = (100.0 *
-          (event.bytesTransferred.toDouble() / event.totalBytes.toDouble()));
+      final double progress = 100.0 *
+          (event.bytesTransferred.toDouble() / event.totalBytes.toDouble());
       onProgress(
         progress,
       );
@@ -82,7 +85,6 @@ class SchoolsApiClient {
         .toList();
   }
 
-
   Future<void> deleteSchoolStudents({required School school}) async {
     try {
       final List<Student> students = (await StudentApiClient().getStudents())
@@ -90,12 +92,12 @@ class SchoolsApiClient {
           .toList();
 
       // Assuming 'students' collection stores the students
-      WriteBatch batch = _firestore.batch();
+      final WriteBatch batch = _firestore.batch();
 
       // Step 2: Batch delete all students
       for (final student in students) {
         // Add delete operation to batch
-        var docRef = _firestore.collection('students').doc(student.id);
+        final docRef = _firestore.collection('students').doc(student.id);
         batch.delete(docRef);
       }
 
@@ -103,9 +105,8 @@ class SchoolsApiClient {
       await batch.commit();
 
       // Step 3: Update school doc 'studentCount' field to 0
-      var schoolDocRef = _firestore.collection('schools').doc(school.id);
+      final schoolDocRef = _firestore.collection('schools').doc(school.id);
       await schoolDocRef.update({'studentCount': 0});
-
     } catch (e) {
       debugPrint(e.toString());
       rethrow;

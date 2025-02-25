@@ -19,7 +19,8 @@ class CareersApiClient {
     required int maxClassSize,
     required int minClassSize,
   }) async {
-    DocumentReference ref = await _firestore.collection(careersCollection).add({
+    final DocumentReference ref =
+        await _firestore.collection(careersCollection).add({
       'name': name,
       'category': category,
       'speakers': speakers,
@@ -56,7 +57,7 @@ class CareersApiClient {
     required String schoolId,
     required String careerId,
   }) async {
-    DocumentSnapshot snap = await _firestore
+    final DocumentSnapshot snap = await _firestore
         .collection('$schoolsCollection/$schoolId/$careersCollection')
         .doc(careerId)
         .get();
@@ -104,7 +105,7 @@ class CareersApiClient {
     required String schoolId,
     required int count,
   }) async {
-    FieldValue increment = FieldValue.increment(count);
+    final FieldValue increment = FieldValue.increment(count);
 
     await _firestore
         .collection(schoolsCollection)
@@ -120,7 +121,10 @@ class CareersApiClient {
     }
   }
 
-  Future<void> updateCareer(Career career)async {
-    await _firestore.collection(careersCollection).doc(career.id).update(career.toJson());
+  Future<void> updateCareer(Career career) async {
+    await _firestore
+        .collection(careersCollection)
+        .doc(career.id)
+        .update(career.toJson());
   }
 }

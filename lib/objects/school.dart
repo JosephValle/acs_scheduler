@@ -65,6 +65,7 @@ class School extends HiveObject {
   final int classroomCount;
   @HiveField(8)
   @JsonKey(defaultValue: 'AM')
+
   /// [time] am or pm
   final String time;
 
@@ -104,7 +105,6 @@ class School extends HiveObject {
       time: time ?? this.time,
     );
   }
-
 
   factory School.fromJson(Map<String, dynamic> json) => _$SchoolFromJson(json);
 

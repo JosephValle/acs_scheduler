@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-
-
 /// This class contains custom colors for our application and maps them to be material
 ///
 /// ***This has a static constructor and can be called as ACColors.primaryColor***

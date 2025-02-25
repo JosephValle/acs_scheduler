@@ -9,8 +9,11 @@ class ManageCareerTile extends StatefulWidget {
   final String schoolId;
   final Career career;
 
-  const ManageCareerTile(
-      {super.key, required this.schoolId, required this.career,});
+  const ManageCareerTile({
+    super.key,
+    required this.schoolId,
+    required this.career,
+  });
 
   @override
   State<ManageCareerTile> createState() => _ManageCareerTileState();
@@ -25,7 +28,9 @@ class _ManageCareerTileState extends State<ManageCareerTile> {
   void initState() {
     context.read<CareersBloc>().add(
           CheckCareerExistsForSchool(
-              careerId: widget.career.id, schoolId: widget.schoolId,),
+            careerId: widget.career.id,
+            schoolId: widget.schoolId,
+          ),
         );
 
     selectedSession = widget.career.session;
@@ -57,14 +62,16 @@ class _ManageCareerTileState extends State<ManageCareerTile> {
                     if (value) {
                       context.read<CareersBloc>().add(
                             AddCareerToSchool(
-                                schoolId: widget.schoolId,
-                                career: widget.career,),
+                              schoolId: widget.schoolId,
+                              career: widget.career,
+                            ),
                           );
                     } else {
                       context.read<CareersBloc>().add(
                             RemoveCareerFromSchool(
-                                schoolId: widget.schoolId,
-                                careerId: widget.career.id,),
+                              schoolId: widget.schoolId,
+                              careerId: widget.career.id,
+                            ),
                           );
                     }
 
@@ -72,54 +79,58 @@ class _ManageCareerTileState extends State<ManageCareerTile> {
                       added = value;
                     });
                   }
-                },),
+                },
+              ),
         trailing: added ?? false
             ? Row(
                 mainAxisSize: MainAxisSize.min,
                 children: Session.values
-                    .map((session) => Container(
-                          constraints: BoxConstraints(
-                              minWidth: MediaQuery.of(context).size.width * .05,
-                              maxWidth: MediaQuery.of(context).size.width * .1,
-                              maxHeight:
-                                  MediaQuery.of(context).size.height * .15,
-                              minHeight:
-                                  MediaQuery.of(context).size.height * .1,),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Radio(
-                                  value: session,
-                                  groupValue: selectedSession,
-                                  onChanged: (newSession) {
-                                    if (newSession != null &&
-                                        newSession != selectedSession) {
-                                      setState(() {
-                                        selectedSession = newSession;
-                                      });
-                                      context.read<CareersBloc>().add(
-                                            SetCareerSessionForSchool(
-                                                careerId: widget.career.id,
-                                                schoolId: widget.schoolId,
-                                                session: newSession,),
-                                          );
-                                    }
-                                  },
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 8.0),
-                                  child: Text(
-                                   session.name,
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.w600,),
+                    .map(
+                      (session) => Container(
+                        constraints: BoxConstraints(
+                          minWidth: MediaQuery.of(context).size.width * .05,
+                          maxWidth: MediaQuery.of(context).size.width * .1,
+                          maxHeight: MediaQuery.of(context).size.height * .15,
+                          minHeight: MediaQuery.of(context).size.height * .1,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Radio(
+                                value: session,
+                                groupValue: selectedSession,
+                                onChanged: (newSession) {
+                                  if (newSession != null &&
+                                      newSession != selectedSession) {
+                                    setState(() {
+                                      selectedSession = newSession;
+                                    });
+                                    context.read<CareersBloc>().add(
+                                          SetCareerSessionForSchool(
+                                            careerId: widget.career.id,
+                                            schoolId: widget.schoolId,
+                                            session: newSession,
+                                          ),
+                                        );
+                                  }
+                                },
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Text(
+                                  session.name,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                        ),)
+                        ),
+                      ),
+                    )
                     .toList(),
               )
             : null,

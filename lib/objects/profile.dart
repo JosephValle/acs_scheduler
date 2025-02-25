@@ -1,4 +1,3 @@
-
 import 'package:hive/hive.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -6,6 +5,7 @@ part 'profile.g.dart';
 
 @JsonSerializable()
 @HiveType(typeId: 0)
+
 /// This is the profile used for the current user and some basic info about them
 ///
 /// [id] is their firebase uid and unique identifier in general
@@ -16,8 +16,7 @@ part 'profile.g.dart';
 ///
 /// {@category Auth}
 /// {@subCategory objects}
-class Profile extends HiveObject{
-
+class Profile extends HiveObject {
   @HiveField(0)
 
   /// [id] is their firebase uid and unique identifier in general
@@ -47,10 +46,16 @@ class Profile extends HiveObject{
   /// [imageUrl] is the user's profile image
   final String imageUrl;
 
-  Profile({required this.email, required this.id, required this.isAdmin, required this.displayName, required this.imageUrl});
+  Profile({
+    required this.email,
+    required this.id,
+    required this.isAdmin,
+    required this.displayName,
+    required this.imageUrl,
+  });
 
-  factory Profile.fromJson(Map<String, dynamic> json) => _$ProfileFromJson(json);
+  factory Profile.fromJson(Map<String, dynamic> json) =>
+      _$ProfileFromJson(json);
 
   Map<String, dynamic> toJson() => _$ProfileToJson(this);
-
 }

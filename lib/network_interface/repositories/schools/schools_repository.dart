@@ -9,31 +9,39 @@ class SchoolsRepository implements BaseSchoolsRepository {
   final SchoolsApiClient _schoolsApiClient = SchoolsApiClient();
 
   @override
-  Future<School> createSchool({required String schoolName,
+  Future<School> createSchool({
+    required String schoolName,
     required String schoolShortName,
     required String category,
-    required String? imageUrl, required String time,}) async {
+    required String? imageUrl,
+    required String time,
+  }) async {
     return await _schoolsApiClient.createSchool(
       schoolName: schoolName,
       shortSchoolName: schoolShortName,
       time: time,
       imageUrl: imageUrl,
-      category: category,);
+      category: category,
+    );
   }
 
   @override
-  Future<void> uploadSchoolImage({required String schoolShortName,
+  Future<void> uploadSchoolImage({
+    required String schoolShortName,
     required XFile image,
     required Function(String downloadLink) onFinished,
-    required Function(double progress) onProgress,}) async {
-    return await _schoolsApiClient.uploadSchoolImage(schoolShortName: schoolShortName,
+    required Function(double progress) onProgress,
+  }) async {
+    return await _schoolsApiClient.uploadSchoolImage(
+      schoolShortName: schoolShortName,
       image: image,
       onProgress: onProgress,
-      onFinished: onFinished,);
+      onFinished: onFinished,
+    );
   }
 
   @override
-  Future<List<School>> loadSchools() async{
+  Future<List<School>> loadSchools() async {
     return await _schoolsApiClient.loadSchools();
   }
 }

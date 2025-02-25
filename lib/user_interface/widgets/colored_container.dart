@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-
-
 /// This is a heavily reused widget. This widget creates a container with a lot of default values.
 /// This widget is used in a lot of the app because of it's versatility.
 ///
@@ -49,9 +47,10 @@ class ColoredContainer extends StatelessWidget {
         width: width,
         height: height,
         decoration: BoxDecoration(
-            border: borderColor == null ? null : Border.all(color: borderColor!),
-            borderRadius: borderRadiusOnly ?? BorderRadius.circular(borderRadius),
-            color: backgroundColor,),
+          border: borderColor == null ? null : Border.all(color: borderColor!),
+          borderRadius: borderRadiusOnly ?? BorderRadius.circular(borderRadius),
+          color: backgroundColor,
+        ),
         child: Padding(
           padding: childPadding,
           child: Center(child: child),

@@ -84,8 +84,10 @@ class _RoomCreationPageState extends State<RoomCreationPage> {
                   controller: _minSizeController,
                   label: 'Minimum Class Size',
                   validator: (value) {
-                    int max = int.tryParse(_maxSizeController.text.trim()) ?? 0;
-                    int min = int.tryParse(_minSizeController.text.trim()) ?? 0;
+                    final int max =
+                        int.tryParse(_maxSizeController.text.trim()) ?? 0;
+                    final int min =
+                        int.tryParse(_minSizeController.text.trim()) ?? 0;
                     if (min > max) {
                       return 'Minimum class size cannot be greater than Maximum';
                     }
@@ -130,7 +132,8 @@ class _RoomCreationPageState extends State<RoomCreationPage> {
                     child: Text(
                       'Create Room',
                       style: TextStyle(
-                          color: Theme.of(context).colorScheme.onSurface,),
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
                     ),
                   ),
                 ),

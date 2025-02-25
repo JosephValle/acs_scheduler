@@ -6,8 +6,12 @@ class ProfileAvatar extends StatelessWidget {
   final String userId;
   final double? radius;
 
-  const ProfileAvatar(
-      {super.key, required this.imageUrl, required this.userId, this.radius,});
+  const ProfileAvatar({
+    super.key,
+    required this.imageUrl,
+    required this.userId,
+    this.radius,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +19,10 @@ class ProfileAvatar extends StatelessWidget {
       radius: radius,
       backgroundColor: ACColors.primaryColor,
       foregroundImage: imageUrl.isEmpty ? null : NetworkImage(imageUrl),
-      child: Icon(Icons.person, color: Theme.of(context).colorScheme.onSurface,),
+      child: Icon(
+        Icons.person,
+        color: Theme.of(context).colorScheme.onSurface,
+      ),
     );
   }
 }

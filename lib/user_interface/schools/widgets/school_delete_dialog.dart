@@ -24,7 +24,9 @@ class SchoolDeleteDialog extends StatelessWidget {
                 child: Text(
                   'Delete ${school.name}?',
                   style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 24.0,),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24.0,
+                  ),
                 ),
               ),
               const Padding(

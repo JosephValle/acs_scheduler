@@ -10,7 +10,6 @@ class SchoolsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return BlocBuilder<SchoolsBloc, SchoolsState>(
       builder: (context, state) {
         return Scaffold(

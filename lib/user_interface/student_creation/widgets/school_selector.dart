@@ -35,22 +35,24 @@ class _SchoolSelectorState extends State<SchoolSelector> {
   Widget build(BuildContext context) {
     return DropdownButton<String>(
       isExpanded: true,
-        value: selection,
-        items: schools
-            .map<DropdownMenuItem<String>>(
-              (e) => DropdownMenuItem(
-                value: e.id,
-                child: Text(e.shortName),
-              ),
-            )
-            .toList(),
-        onChanged: (value){
-          if(value != null){
-            widget.onChanged(schools.firstWhere((element) => element.id == value));
-            setState(() {
-              selection = value;
-            });
-          }
-        },);
+      value: selection,
+      items: schools
+          .map<DropdownMenuItem<String>>(
+            (e) => DropdownMenuItem(
+              value: e.id,
+              child: Text(e.shortName),
+            ),
+          )
+          .toList(),
+      onChanged: (value) {
+        if (value != null) {
+          widget
+              .onChanged(schools.firstWhere((element) => element.id == value));
+          setState(() {
+            selection = value;
+          });
+        }
+      },
+    );
   }
 }

@@ -24,13 +24,13 @@ class SchoolsBloc extends Bloc<SchoolsEvent, SchoolsState> {
     on<DeleteSchool>(_deleteSchool);
   }
 
-  void _mapLoadSchoolsToState(LoadSchools event, emit) async {
+  Future<void> _mapLoadSchoolsToState(LoadSchools event, emit) async {
     schools = await _schoolsRepository.loadSchools();
 
     emit(SchoolsLoaded(schools: schools));
   }
 
-  void _mapCreateSchoolToState(CreateSchool event, emit) async {
+  Future<void> _mapCreateSchoolToState(CreateSchool event, emit) async {
     if (event.image != null) {
       await _schoolsRepository.uploadSchoolImage(
         schoolShortName: event.schoolShortName,
@@ -64,17 +64,17 @@ class SchoolsBloc extends Bloc<SchoolsEvent, SchoolsState> {
     }
   }
 
-  void _mapUploadProgressUpdatedToState(
-      UploadProgressUpdated event,
-      emit,
-      ) async {
+  Future<void> _mapUploadProgressUpdatedToState(
+    UploadProgressUpdated event,
+    emit,
+  ) async {
     emit(
       ImageUploadProgressUpdated(schools: schools, progress: event.progress),
     );
   }
 
-  void _mapUploadSchoolToState(UploadSchool event, emit) async {
-    School newSchool = await _schoolsRepository.createSchool(
+  Future<void> _mapUploadSchoolToState(UploadSchool event, emit) async {
+    final School newSchool = await _schoolsRepository.createSchool(
       schoolName: event.schoolName,
       schoolShortName: event.schoolShortName,
       category: event.category,
@@ -86,7 +86,7 @@ class SchoolsBloc extends Bloc<SchoolsEvent, SchoolsState> {
     emit(SchoolCreated(schools: schools));
   }
 
-  void _deleteSchool(DeleteSchool event, emit) async {
+  Future<void> _deleteSchool(DeleteSchool event, emit) async {
     // TODO: ACTUALLY DELETE IT
     schools.removeWhere((element) => element.id == event.school.id);
     emit(SchoolsLoaded(schools: schools));

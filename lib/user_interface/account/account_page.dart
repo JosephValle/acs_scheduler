@@ -23,14 +23,16 @@ class AccountPage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: ProfileAvatar(
-                        imageUrl: state.currentUser?.imageUrl ?? '',
-                        userId: state.currentUser?.id ?? '',
-                        radius: MediaQuery.of(context).size.width / 30,),
+                      imageUrl: state.currentUser?.imageUrl ?? '',
+                      userId: state.currentUser?.id ?? '',
+                      radius: MediaQuery.of(context).size.width / 30,
+                    ),
                   ),
                   Text(
                     state.currentUser?.displayName ?? '',
                     style: TextStyle(
-                        fontSize: MediaQuery.of(context).size.width / 30,),
+                      fontSize: MediaQuery.of(context).size.width / 30,
+                    ),
                   ),
                 ],
               ),
@@ -45,7 +47,8 @@ class AccountPage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                    "Permissions: ${state.currentUser?.isAdmin ?? false ? "Admin" : "Standard"}",),
+                  "Permissions: ${state.currentUser?.isAdmin ?? false ? "Admin" : "Standard"}",
+                ),
               ),
               const Spacer(),
               Padding(
@@ -56,7 +59,8 @@ class AccountPage extends StatelessWidget {
                   child: Text(
                     'Sign Out',
                     style: TextStyle(
-                        color: Theme.of(context).colorScheme.onSurface,),
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
                   ),
                 ),
               ),

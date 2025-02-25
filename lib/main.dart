@@ -1,4 +1,3 @@
-
 import 'package:adams_county_scheduler/logical_interface/bloc/careers/careers_bloc.dart';
 import 'package:adams_county_scheduler/logical_interface/bloc/scheduler/scheduler_bloc.dart';
 import 'package:adams_county_scheduler/logical_interface/bloc/school_detail/school_detail_bloc.dart';
@@ -51,7 +50,7 @@ void main() async {
   //   return true;
   // };
 
-  User? user = FirebaseAuth.instance.currentUser;
+  final User? user = FirebaseAuth.instance.currentUser;
 
   runApp(
     AdamsCountScheduler(
@@ -134,11 +133,11 @@ class AdamsCountScheduler extends StatelessWidget {
           onGenerateRoute: RoutesMap.onGenerateRoute,
           theme: ThemeData(
             colorScheme: lightColorScheme,
-            tabBarTheme: LightTabBarTheme(),
+            tabBarTheme: const LightTabBarTheme(),
           ),
           darkTheme: ThemeData(
             colorScheme: darkColorScheme,
-            tabBarTheme: DarkTabBarTheme(),
+            tabBarTheme: const DarkTabBarTheme(),
           ),
           routes: RoutesMap.routesMap,
           initialRoute:

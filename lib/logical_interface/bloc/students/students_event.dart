@@ -23,10 +23,9 @@ class EditStudent extends StudentsEvent {
   });
 }
 
-
 class LoadStudents extends StudentsEvent {}
 
-class ResetBulkUpload extends StudentsEvent{}
+class ResetBulkUpload extends StudentsEvent {}
 
 class SortStudents extends StudentsEvent {
   final bool ascending;
@@ -41,6 +40,4 @@ class BulkUploadStudents extends StudentsEvent {
   BulkUploadStudents({required this.sheet});
 }
 
-class ClearAllStudents extends StudentsEvent {
-
-}
+class ClearAllStudents extends StudentsEvent {}

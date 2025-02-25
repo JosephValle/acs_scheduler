@@ -68,71 +68,74 @@ class _SchoolCreationPageState extends State<SchoolCreationPage> {
                         height: MediaQuery.of(context).size.width / 3.5,
                         child: image == null
                             ? ColoredContainer(
-                          onTap: () async {
-                            XFile? selectedImage = await ImagePicker()
-                                .pickImage(source: ImageSource.gallery);
+                                onTap: () async {
+                                  final XFile? selectedImage =
+                                      await ImagePicker().pickImage(
+                                    source: ImageSource.gallery,
+                                  );
 
-                            if (selectedImage != null) {
-                              setState(() {
-                                image = selectedImage;
-                              });
-                            }
-                          },
-                          backgroundColor: ACColors.primaryColor,
-                          child: Icon(
-                            Icons.image_outlined,
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onSurface,
-                            size: MediaQuery.of(context).size.width / 20,
-                          ),
-                        )
-                            : GestureDetector(
-                          onTap: () async {
-                            if (uploadProgress == 0) {
-                              XFile? selectedImage = await ImagePicker()
-                                  .pickImage(source: ImageSource.gallery);
-
-                              if (selectedImage != null) {
-                                setState(() {
-                                  image = selectedImage;
-                                });
-                              }
-                            }
-                          },
-                          child: Stack(
-                            children: [
-                              Positioned.fill(
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(20),
-                                  child: FutureBuilder(
-                                    future: image!.readAsBytes(),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.hasData) {
-                                        return Image.memory(
-                                          snapshot.requireData,
-                                          fit: BoxFit.cover,
-                                        );
-                                      }
-
-                                      return const Center(
-                                        child:
-                                        CircularProgressIndicator(),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
-                              uploadProgress > 0
-                                  ? Center(
-                                child: CircularProgressIndicator(
-                                  value: uploadProgress,
+                                  if (selectedImage != null) {
+                                    setState(() {
+                                      image = selectedImage;
+                                    });
+                                  }
+                                },
+                                backgroundColor: ACColors.primaryColor,
+                                child: Icon(
+                                  Icons.image_outlined,
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface,
+                                  size: MediaQuery.of(context).size.width / 20,
                                 ),
                               )
-                                  : Container(),
-                            ],
-                          ),
-                        ),
+                            : GestureDetector(
+                                onTap: () async {
+                                  if (uploadProgress == 0) {
+                                    final XFile? selectedImage =
+                                        await ImagePicker().pickImage(
+                                      source: ImageSource.gallery,
+                                    );
+
+                                    if (selectedImage != null) {
+                                      setState(() {
+                                        image = selectedImage;
+                                      });
+                                    }
+                                  }
+                                },
+                                child: Stack(
+                                  children: [
+                                    Positioned.fill(
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(20),
+                                        child: FutureBuilder(
+                                          future: image!.readAsBytes(),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.hasData) {
+                                              return Image.memory(
+                                                snapshot.requireData,
+                                                fit: BoxFit.cover,
+                                              );
+                                            }
+
+                                            return const Center(
+                                              child:
+                                                  CircularProgressIndicator(),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                    uploadProgress > 0
+                                        ? Center(
+                                            child: CircularProgressIndicator(
+                                              value: uploadProgress,
+                                            ),
+                                          )
+                                        : Container(),
+                                  ],
+                                ),
+                              ),
                       ),
                     ),
                     Expanded(
@@ -156,16 +159,17 @@ class _SchoolCreationPageState extends State<SchoolCreationPage> {
                               ),
                               DropdownButton(
                                 items: times.map<DropdownMenuItem<String>>(
-                                        (String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value),
-                                      );
-                                    }).toList(),
+                                    (String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
                                 onChanged: (value) => setState(() {
                                   time = value!;
                                 }),
-                                value: time,),
+                                value: time,
+                              ),
                               Expanded(
                                 child: Padding(
                                   padding: const EdgeInsets.only(top: 8.0),
@@ -180,10 +184,10 @@ class _SchoolCreationPageState extends State<SchoolCreationPage> {
                                         items: categories
                                             .map<DropdownMenuItem<String>>(
                                               (e) => DropdownMenuItem<String>(
-                                            value: e,
-                                            child: Text('Session: $e'),
-                                          ),
-                                        )
+                                                value: e,
+                                                child: Text('Session: $e'),
+                                              ),
+                                            )
                                             .toList(),
                                         onChanged: (value) {
                                           if (value != null) {
@@ -215,15 +219,15 @@ class _SchoolCreationPageState extends State<SchoolCreationPage> {
                     onTap: () {
                       if (uploadProgress == 0) {
                         context.read<SchoolsBloc>().add(
-                          CreateSchool(
-                            schoolShortName:
-                            _shortNameController.text.trim(),
-                            schoolName: _shortNameController.text.trim(),
-                            category: category,
-                            image: image,
-                            time: time,
-                          ),
-                        );
+                              CreateSchool(
+                                schoolShortName:
+                                    _shortNameController.text.trim(),
+                                schoolName: _shortNameController.text.trim(),
+                                category: category,
+                                image: image,
+                                time: time,
+                              ),
+                            );
                       }
                     },
                     backgroundColor: ACColors.secondaryColor

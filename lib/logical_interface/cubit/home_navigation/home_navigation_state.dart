@@ -9,10 +9,8 @@ abstract class HomeNavigationState {
 
 class HomeNavigationInitial extends HomeNavigationState {
   const HomeNavigationInitial({required super.selectedIndex});
-
 }
 
-class NavigationIndexUpdated extends HomeNavigationState{
+class NavigationIndexUpdated extends HomeNavigationState {
   const NavigationIndexUpdated({required super.selectedIndex});
-
 }

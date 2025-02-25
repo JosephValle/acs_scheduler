@@ -57,14 +57,15 @@ class Student extends HiveObject {
   /// [schoolId] is the students school's Id
   final String schoolId;
 
-  Student(
-      {required this.id,
-      required this.school,
-      required this.firstName,
-      required this.lastName,
-      required this.careerPriority,
-      required this.grade,
-      required this.schoolId,});
+  Student({
+    required this.id,
+    required this.school,
+    required this.firstName,
+    required this.lastName,
+    required this.careerPriority,
+    required this.grade,
+    required this.schoolId,
+  });
 
   factory Student.fromJson(Map<String, dynamic> json) =>
       _$StudentFromJson(json);
@@ -74,6 +75,8 @@ class Student extends HiveObject {
   static CareerPriority _careerPriorityFromJson(Map<String, dynamic> data) =>
       CareerPriority.fromJson(data);
 
-  static Map<String, dynamic> _careerPriorityToJson(CareerPriority careerPriority) =>
+  static Map<String, dynamic> _careerPriorityToJson(
+    CareerPriority careerPriority,
+  ) =>
       careerPriority.toJson();
 }

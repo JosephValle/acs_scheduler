@@ -121,7 +121,7 @@ class _CreateSessionDialogState extends State<CreateSessionDialog> {
     if (_selectedTime == null) {
       return;
     }
-    DateTime time = DateTime(
+    final DateTime time = DateTime(
       _fixedDate.year,
       _fixedDate.month,
       _fixedDate.day,

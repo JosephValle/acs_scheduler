@@ -248,12 +248,14 @@ class StudentsPage extends StatelessWidget {
                                       onPressed: () => {
                                         // TODO: Implement Student Editing
                                         Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    StudentCreationPage(
-                                                      student: e,
-                                                    ),),),
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                StudentCreationPage(
+                                              student: e,
+                                            ),
+                                          ),
+                                        ),
                                       },
                                     ),
                                   ),

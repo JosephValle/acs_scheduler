@@ -17,7 +17,7 @@ class StudentApiClient {
     required String schoolId,
     required int grade,
   }) async {
-    DocumentReference ref =
+    final DocumentReference ref =
         await _firestore.collection(studentsCollection).add({
       'firstName': firstName,
       'lastName': lastName,
@@ -79,9 +79,9 @@ class StudentApiClient {
 
     try {
       // Delete students
-      QuerySnapshot studentsSnapshot =
+      final QuerySnapshot studentsSnapshot =
           await _firestore.collection('students').get();
-      for (var doc in studentsSnapshot.docs) {
+      for (final doc in studentsSnapshot.docs) {
         batch.delete(doc.reference);
         operationCount++;
 
@@ -97,9 +97,9 @@ class StudentApiClient {
       }
 
       // Reset studentCount in schools
-      QuerySnapshot schoolsSnapshot =
+      final QuerySnapshot schoolsSnapshot =
           await _firestore.collection('schools').get();
-      for (var doc in schoolsSnapshot.docs) {
+      for (final doc in schoolsSnapshot.docs) {
         _firestore
             .collection('schools')
             .doc(doc.id)
@@ -120,7 +120,8 @@ class StudentApiClient {
     required String schoolId,
     required int grade,
   }) async {
-    DocumentReference ref = _firestore.collection(studentsCollection).doc(id);
+    final DocumentReference ref =
+        _firestore.collection(studentsCollection).doc(id);
 
     // Update the document with new values
     await ref.update({

@@ -33,15 +33,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
-  void _mapSignOutToState(SignOut event, emit) async {
+  Future<void> _mapSignOutToState(SignOut event, emit) async {
     await _authRepository.signOut();
     currentUser = null;
 
     emit(SignedOut(currentUser: currentUser));
   }
 
-  void _mapSignInToState(SignIn event, emit) async {
-    Profile? user = await _authRepository.signIn(
+  Future<void> _mapSignInToState(SignIn event, emit) async {
+    final Profile? user = await _authRepository.signIn(
       email: event.email,
       password: event.password,
     );
@@ -59,8 +59,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
-  void _mapGetProfileToState(GetProfile event, emit) async {
-    Profile? profile = await _authRepository.getProfile(userId: event.userId);
+  Future<void> _mapGetProfileToState(GetProfile event, emit) async {
+    final Profile? profile =
+        await _authRepository.getProfile(userId: event.userId);
 
     if (profile != null) {
       if (profile.id == _authRepository.currentUser?.uid) {

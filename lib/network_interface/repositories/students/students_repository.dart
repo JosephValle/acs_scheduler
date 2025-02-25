@@ -48,14 +48,15 @@ class StudentsRepository implements BaseStudentsRepository {
     return await _studentsApiClient.clearAllStudents();
   }
 
-  Future<Student> editStudent(
-      {required String id, required String firstName,
-      required String lastName,
-      required CareerPriority careerPriority,
-      required String school,
-      required String schoolId,
-      required int grade,}) async {
-
+  Future<Student> editStudent({
+    required String id,
+    required String firstName,
+    required String lastName,
+    required CareerPriority careerPriority,
+    required String school,
+    required String schoolId,
+    required int grade,
+  }) async {
     return await _studentsApiClient.editStudent(
       id: id,
       firstName: firstName,

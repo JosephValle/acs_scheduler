@@ -19,25 +19,27 @@ class SchoolDetailRepository implements BaseSchoolDetailRepository {
   }
 
   @override
-  Future<Room> createRoom(
-      {required String schoolId,
-      required String name,
-      required String building,
-      required int maxSize,
-      required int? minSize,}) async {
+  Future<Room> createRoom({
+    required String schoolId,
+    required String name,
+    required String building,
+    required int maxSize,
+    required int? minSize,
+  }) async {
     return await _schoolDetailsApiClient.createRoom(
-        schoolId: schoolId,
-        name: name,
-        building: building,
-        maxSize: maxSize,
-        minSize: minSize,);
+      schoolId: schoolId,
+      name: name,
+      building: building,
+      maxSize: maxSize,
+      minSize: minSize,
+    );
   }
 
   @override
-  Future<List<Room>> loadRooms({required String schoolId})async {
-    try{
+  Future<List<Room>> loadRooms({required String schoolId}) async {
+    try {
       return await _schoolDetailsApiClient.loadRooms(schoolId: schoolId);
-    }catch(e){
+    } catch (e) {
       debugPrint('Load rooms error $e');
       return [];
     }

@@ -2,6 +2,8 @@ import 'package:adams_county_scheduler/utilities/colors/ac_colors.dart';
 import 'package:flutter/material.dart';
 
 class LightTabBarTheme extends TabBarTheme {
+  const LightTabBarTheme({super.key});
+
   @override
   Color? get labelColor => ACColors.secondaryColor;
 
@@ -16,6 +18,8 @@ class LightTabBarTheme extends TabBarTheme {
 }
 
 class DarkTabBarTheme extends TabBarTheme {
+  const DarkTabBarTheme({super.key});
+
   @override
   Color? get labelColor => ACColors.primaryColor;
 

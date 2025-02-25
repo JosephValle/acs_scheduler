@@ -35,7 +35,7 @@ class RoutesMap {
     switch (settings.name) {
       case Routes.careerCreationPage:
         {
-          Career? career = settings.arguments as Career?;
+          final Career? career = settings.arguments as Career?;
           return MaterialPageRoute(
             builder: (context) => CareerCreationPage(
               career: career,
@@ -45,7 +45,7 @@ class RoutesMap {
         }
       case Routes.schoolDetailPage:
         {
-          SchoolDetailPageArgs args =
+          final SchoolDetailPageArgs args =
               settings.arguments as SchoolDetailPageArgs;
 
           return MaterialPageRoute(
@@ -55,7 +55,7 @@ class RoutesMap {
         }
       case Routes.careerManagementPage:
         {
-          CareerManagementArgs args =
+          final CareerManagementArgs args =
               settings.arguments as CareerManagementArgs;
 
           return MaterialPageRoute(
@@ -68,7 +68,7 @@ class RoutesMap {
         }
       case Routes.roomCreationPage:
         {
-          RoomCreationPageArgs args =
+          final RoomCreationPageArgs args =
               settings.arguments as RoomCreationPageArgs;
 
           return MaterialPageRoute(

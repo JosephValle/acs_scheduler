@@ -27,11 +27,13 @@ class ClearStudentsDialog extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text('Cancel'),),
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('Cancel'),
+                  ),
                   TextButton(
-                      onPressed: () => _handleDeleteAll(context),
-                      child: const Text('DELETE'),),
+                    onPressed: () => _handleDeleteAll(context),
+                    child: const Text('DELETE'),
+                  ),
                 ],
               ),
             ),

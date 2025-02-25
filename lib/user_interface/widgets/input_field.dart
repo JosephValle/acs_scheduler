@@ -78,11 +78,11 @@ class InputField extends StatelessWidget {
         label == null
             ? Container()
             : Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(label!),
-        ),
+                padding: const EdgeInsets.all(8.0),
+                child: Text(label!),
+              ),
         Padding(
-          padding: padding?? const EdgeInsets.all(8.0),
+          padding: padding ?? const EdgeInsets.all(8.0),
           child: TextFormField(
             enabled: enabled,
             style: textStyle,

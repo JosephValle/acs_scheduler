@@ -41,7 +41,7 @@ class SchoolDetailsApiClient {
     required int maxSize,
     required int? minSize,
   }) async {
-    DocumentReference ref =
+    final DocumentReference ref =
         await _firestore.collection('$schoolsCollection/$schoolId/rooms').add({
       'name': name,
       'building': building,

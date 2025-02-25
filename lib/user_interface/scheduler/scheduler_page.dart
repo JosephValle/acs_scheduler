@@ -45,11 +45,11 @@ class _SchedulerPageState extends State<SchedulerPage> {
                   ],
                 ),
               ),
-              if( state is SchedulerLoading)
-              Container(
-                color: Colors.grey.withOpacity(.25),
-                child: const Center(child: CircularProgressIndicator()),
-              ),
+              if (state is SchedulerLoading)
+                ColoredBox(
+                  color: Colors.grey.withOpacity(.25),
+                  child: const Center(child: CircularProgressIndicator()),
+                ),
             ],
           ),
         );

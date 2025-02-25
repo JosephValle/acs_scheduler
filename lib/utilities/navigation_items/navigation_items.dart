@@ -10,11 +10,12 @@ import 'package:flutter/material.dart';
 
 import '../../objects/profile.dart';
 
-List<CollapsibleItem> getNavigationItems(
-    {required Profile? currentUser,
-    required HomeNavigationState navigationState,
-    required Function(int index) updateIndex,}) {
-  List<CollapsibleItem> items = [
+List<CollapsibleItem> getNavigationItems({
+  required Profile? currentUser,
+  required HomeNavigationState navigationState,
+  required Function(int index) updateIndex,
+}) {
+  final List<CollapsibleItem> items = [
     CollapsibleItem(
       isSelected: navigationState.selectedIndex == 0,
       text: 'Schools',
@@ -55,7 +56,6 @@ List<CollapsibleItem> getNavigationItems(
         updateIndex(4);
       },
     ),
-
   ];
 
   if (currentUser?.isAdmin ?? false) {

@@ -98,14 +98,15 @@ class _SchoolTileState extends State<SchoolTile> {
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: IconButton(
-                                onPressed: () async {
-                                  await SchoolsApiClient()
-                                      .deleteSchoolStudents(school: school);
-                                  setState(() {
-                                    school = school.copyWith(studentCount: 0);
-                                  });
-                                },
-                                icon: const Icon(Icons.delete),),
+                              onPressed: () async {
+                                await SchoolsApiClient()
+                                    .deleteSchoolStudents(school: school);
+                                setState(() {
+                                  school = school.copyWith(studentCount: 0);
+                                });
+                              },
+                              icon: const Icon(Icons.delete),
+                            ),
                           ),
                         ),
                         Align(

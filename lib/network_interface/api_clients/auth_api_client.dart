@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -37,9 +36,12 @@ class AuthApiClient {
   }
 
   /// This method will trigger the google sign in method. This will display the proper native items to have a user login and redirect accordingly
-  Future<Profile?> signIn({required String email, required String password}) async {
+  Future<Profile?> signIn({
+    required String email,
+    required String password,
+  }) async {
     try {
-      UserCredential userCredential = await FirebaseAuth.instance
+      final UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
 
       Profile? profile;
@@ -72,7 +74,6 @@ class AuthApiClient {
       return null;
     }
   }
-
 
   /// This getter can be used to find the current Firebase auth user
   User? get currentUser => _auth.currentUser;

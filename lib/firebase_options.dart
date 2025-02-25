@@ -67,7 +67,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '215002605660',
     projectId: 'adams-county-scheduler',
     storageBucket: 'adams-county-scheduler.appspot.com',
-    iosClientId: '215002605660-er2qrtk314seg11parnli7s5gkjknoqc.apps.googleusercontent.com',
+    iosClientId:
+        '215002605660-er2qrtk314seg11parnli7s5gkjknoqc.apps.googleusercontent.com',
     iosBundleId: 'com.adamscountyscheduler.app.adamsCountyScheduler',
   );
 
@@ -77,7 +78,9 @@ class DefaultFirebaseOptions {
     messagingSenderId: '215002605660',
     projectId: 'adams-county-scheduler',
     storageBucket: 'adams-county-scheduler.appspot.com',
-    iosClientId: '215002605660-c904qaoonm3uqdf69tgarrlpe54u6hna.apps.googleusercontent.com',
-    iosBundleId: 'com.adamscountyscheduler.app.adamsCountyScheduler.RunnerTests',
+    iosClientId:
+        '215002605660-c904qaoonm3uqdf69tgarrlpe54u6hna.apps.googleusercontent.com',
+    iosBundleId:
+        'com.adamscountyscheduler.app.adamsCountyScheduler.RunnerTests',
   );
 }

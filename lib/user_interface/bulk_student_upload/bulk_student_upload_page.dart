@@ -55,19 +55,19 @@ class _BulkStudentUploadPageState extends State<BulkStudentUploadPage> {
                         cursor: SystemMouseCursors.click,
                         child: ColoredContainer(
                           onTap: () async {
-                            firebase_storage.Reference ref = firebase_storage
-                                .FirebaseStorage.instance
-                                .ref('templates/TestData.xlsx');
+                            final firebase_storage.Reference ref =
+                                firebase_storage.FirebaseStorage.instance
+                                    .ref('templates/TestData.xlsx');
 
                             // Get the download URL
-                            String url = await ref.getDownloadURL();
+                            final String url = await ref.getDownloadURL();
                             html.AnchorElement(href: url)
                               ..setAttribute('download', 'TestData.xlsx')
                               ..click();
                             html.Url.revokeObjectUrl(url);
                           },
                           backgroundColor:
-                          Theme.of(context).colorScheme.primary,
+                              Theme.of(context).colorScheme.primary,
                           child: Text(
                             'Download Template File',
                             style: TextStyle(
@@ -90,30 +90,30 @@ class _BulkStudentUploadPageState extends State<BulkStudentUploadPage> {
                         cursor: SystemMouseCursors.click,
                         child: ColoredContainer(
                           onTap: () async {
-                            FilePickerResult? result =
-                            await FilePicker.platform.pickFiles(
+                            final FilePickerResult? result =
+                                await FilePicker.platform.pickFiles(
                               type: FileType.custom,
                               allowedExtensions: ['xlsx'],
                               allowMultiple: false,
                             );
 
                             if (result != null) {
-                              List<int>? bytes =
-                              result.files.single.bytes?.toList();
+                              final List<int>? bytes =
+                                  result.files.single.bytes?.toList();
                               if (bytes != null) {
-                                Excel excel = Excel.decodeBytes(bytes);
+                                final Excel excel = Excel.decodeBytes(bytes);
 
-                                Sheet sheet =
-                                excel.tables[excel.tables.keys.first]!;
+                                final Sheet sheet =
+                                    excel.tables[excel.tables.keys.first]!;
 
-                                List<Data?> headers = sheet.row(0);
+                                final List<Data?> headers = sheet.row(0);
 
-                                List<String> headerValues = headers
+                                final List<String> headerValues = headers
                                     .map<String>(
                                       (e) =>
-                                  e?.value.toString().toLowerCase() ??
-                                      '',
-                                )
+                                          e?.value.toString().toLowerCase() ??
+                                          '',
+                                    )
                                     .toList();
                                 headerValues.sort((a, b) => a.compareTo(b));
                                 cells.sort((a, b) => a.compareTo(b));
@@ -127,14 +127,14 @@ class _BulkStudentUploadPageState extends State<BulkStudentUploadPage> {
                                 } else {
                                   setState(() {
                                     error =
-                                    'This excel does not have valid headers';
+                                        'This excel does not have valid headers';
                                   });
                                 }
                               }
                             }
                           },
                           backgroundColor:
-                          Theme.of(context).colorScheme.primary,
+                              Theme.of(context).colorScheme.primary,
                           child: Text(
                             'Select File',
                             style: TextStyle(
@@ -150,133 +150,133 @@ class _BulkStudentUploadPageState extends State<BulkStudentUploadPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: error.isEmpty
                       ? const Text(
-                    'Please select an excel file with column headers "First Name", "Last Name", "School", "n priorty" with values 1-5 for n',
-                  )
+                          'Please select an excel file with column headers "First Name", "Last Name", "School", "n priorty" with values 1-5 for n',
+                        )
                       : Text(
-                    error,
-                    style: const TextStyle(color: Colors.red),
-                  ),
+                          error,
+                          style: const TextStyle(color: Colors.red),
+                        ),
                 ),
                 uploadedSheet == null
                     ? Container()
                     : Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'You have uploaded a valid excel with $maxSize students. Proceed to upload?',
-                    style: const TextStyle(color: Colors.green),
-                  ),
-                ),
-                uploadedSheet == null
-                    ? Container()
-                    : Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Center(
-                    child: Container(
-                      constraints: BoxConstraints(
-                        maxWidth: MediaQuery.of(context).size.width / 4,
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'You have uploaded a valid excel with $maxSize students. Proceed to upload?',
+                          style: const TextStyle(color: Colors.green),
+                        ),
                       ),
-                      child: MouseRegion(
-                        cursor: SystemMouseCursors.click,
-                        child: ColoredContainer(
-                          onTap: () async {
-                            context.read<StudentsBloc>().add(
-                              BulkUploadStudents(
-                                sheet: uploadedSheet!,
+                uploadedSheet == null
+                    ? Container()
+                    : Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Center(
+                          child: Container(
+                            constraints: BoxConstraints(
+                              maxWidth: MediaQuery.of(context).size.width / 4,
+                            ),
+                            child: MouseRegion(
+                              cursor: SystemMouseCursors.click,
+                              child: ColoredContainer(
+                                onTap: () async {
+                                  context.read<StudentsBloc>().add(
+                                        BulkUploadStudents(
+                                          sheet: uploadedSheet!,
+                                        ),
+                                      );
+                                },
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.secondary,
+                                child: Text(
+                                  'Upload $maxSize Students',
+                                  style: TextStyle(
+                                    color:
+                                        Theme.of(context).colorScheme.surface,
+                                  ),
+                                ),
                               ),
-                            );
-                          },
-                          backgroundColor:
-                          Theme.of(context).colorScheme.secondary,
-                          child: Text(
-                            'Upload $maxSize Students',
-                            style: TextStyle(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surface,
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                ),
               ],
             ),
             secondChild: state is BulkUploadStarted
                 ? const Center(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: CircularProgressIndicator(),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text(
-                      'We are rolling the students into the cloud.. This may take a moment',
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: CircularProgressIndicator(),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(
+                            'We are rolling the students into the cloud.. This may take a moment',
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
-            )
+                  )
                 : state is UploadFinished
-                ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Icon(
-                      Icons.check_circle_outline,
-                      color: Colors.green,
-                      size: MediaQuery.of(context).size.width / 6,
-                    ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text('Your upload has been finished!'),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                      onPressed: () => context
-                          .read<StudentsBloc>()
-                          .add(ResetBulkUpload()),
-                      child: const Text('Upload More'),),
-                  ),
-                  state.errors.isEmpty
-                      ? Container()
-                      : const Text(
-                    'We ran into errors with the following students...',
-                  ),
-                  state.errors.isEmpty
-                      ? Container()
-                      : Expanded(
-                    child: Center(
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: state.errors.length,
-                        itemBuilder: (context, index) =>
+                    ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
                             Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                state.errors.elementAt(index),
+                              child: Icon(
+                                Icons.check_circle_outline,
+                                color: Colors.green,
+                                size: MediaQuery.of(context).size.width / 6,
                               ),
                             ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            )
-                : Container(),
+                            const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text('Your upload has been finished!'),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ElevatedButton(
+                                onPressed: () => context
+                                    .read<StudentsBloc>()
+                                    .add(ResetBulkUpload()),
+                                child: const Text('Upload More'),
+                              ),
+                            ),
+                            state.errors.isEmpty
+                                ? Container()
+                                : const Text(
+                                    'We ran into errors with the following students...',
+                                  ),
+                            state.errors.isEmpty
+                                ? Container()
+                                : Expanded(
+                                    child: Center(
+                                      child: ListView.builder(
+                                        shrinkWrap: true,
+                                        itemCount: state.errors.length,
+                                        itemBuilder: (context, index) =>
+                                            Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            state.errors.elementAt(index),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                          ],
+                        ),
+                      )
+                    : Container(),
             crossFadeState:
-            (state is BulkUploadStarted || state is UploadFinished)
-                ? CrossFadeState.showSecond
-                : CrossFadeState.showFirst,
+                (state is BulkUploadStarted || state is UploadFinished)
+                    ? CrossFadeState.showSecond
+                    : CrossFadeState.showFirst,
             duration: const Duration(seconds: 1),
           );
         },

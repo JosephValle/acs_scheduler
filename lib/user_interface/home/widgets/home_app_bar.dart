@@ -14,13 +14,14 @@ class HomeAppBar extends AppBar {
 
   final Function() onSignOut;
 
-  HomeAppBar(
-      {super.key,
-      required this.imageUrl,
-      required this.displayName,
-      required this.userId,
-      required super.leadingWidth,
-      required this.onSignOut,});
+  HomeAppBar({
+    super.key,
+    required this.imageUrl,
+    required this.displayName,
+    required this.userId,
+    required super.leadingWidth,
+    required this.onSignOut,
+  });
 
   @override
   Widget? get leading => Row(

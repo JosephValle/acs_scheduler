@@ -41,8 +41,9 @@ class CareerTile extends StatelessWidget {
             children: [
               IconButton(
                 tooltip: 'Edit',
-                  onPressed: () => _handleEdit(context),
-                  icon: const Icon(Icons.edit),),
+                onPressed: () => _handleEdit(context),
+                icon: const Icon(Icons.edit),
+              ),
               IconButton(
                 tooltip: 'Delete',
                 icon: const Icon(Icons.delete),
