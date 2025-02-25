@@ -26,28 +26,26 @@ dependencies:
     git:
       url: https://github.com/hunterwilhelm/docx_template_dart.git
       commit: 8947449
+  file_picker: ^9.0.1 # For file picking
   firebase_analytics: ^11.3.3 # For firebase analytics
+  firebase_auth: ^5.3.1 # For firebase authentication
   firebase_core: ^3.6.0 # For firebase core
   firebase_messaging: ^15.1.3 # For firebase messaging
   firebase_storage: ^12.3.4 # For firebase storage
   flutter: # For flutter
     sdk: flutter
   flutter_bloc: ^9.0.0 # For state management
-  flutter_local_notifications: ^18.0.0 # For local notifications
-  flutter_svg: ^2.0.9 # For svg images
-
-  file_picker: ^9.0.1 # For file picking
-  firebase_auth: ^5.3.1 # For firebase authentication
   flutter_excel: ^1.0.1 # For excel files
+  flutter_local_notifications: ^18.0.0 # For local notifications
   flutter_phoenix: ^1.1.0 # For hot reload
+  flutter_svg: ^2.0.9 # For svg images
   fluttertoast: ^8.2.1 # For toast messages
   google_sign_in: ^6.1.6 # For google sign in
   hive: ^2.2.3 # For local storage
   hive_flutter: ^1.1.0 # For local storage
-  intl: ^0.20.2 # For internationalization
-  retrofit: ^4.0.1 # For http requests
   icons_launcher: ^3.0.0 # For app icons
   image_picker: ^1.0.5 # For image picking
+  intl: ^0.20.2 # For internationalization
   json_annotation: ^4.8.1 # For json serialization
   meta: ^1.9.1 # For metadata
   package_info_plus: ^8.1.0 # For package info
@@ -55,6 +53,7 @@ dependencies:
   path_provider: ^2.0.13 # For file paths
   permission_handler: ^11.2.0 # For permissions
   provider: ^6.0.5 # For state management
+  retrofit: ^4.0.1 # For http requests
   share_plus: ^10.1.1 # For sharing
   shared_preferences: ^2.1.0 # For shared preferences
   shimmer: ^3.0.0 # For shimmer effect

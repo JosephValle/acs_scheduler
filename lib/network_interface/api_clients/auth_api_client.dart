@@ -70,7 +70,7 @@ class AuthApiClient {
       }
       return profile;
     } catch (e) {
-      print('Sign-in error: $e');
+      debugPrint('Sign-in error: $e');
       return null;
     }
   }

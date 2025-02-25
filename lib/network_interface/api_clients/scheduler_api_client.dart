@@ -162,7 +162,7 @@ class SchedulerApiClient {
       final List<PlainContent> masterPlainContentList = [];
       final Map<String, List<PlainContent>> schoolContents = {};
 
-      print('There are ${schedules.length} schedules');
+      debugPrint('There are ${schedules.length} schedules');
 
       // Process each schedule.
       for (final ExportStudentSchedule schedule in schedules) {
@@ -202,10 +202,6 @@ class SchedulerApiClient {
         schoolContents[schedule.school]!.add(plainContent);
       }
 
-      // Debug log for school grouping.
-      for (final school in schoolContents.keys) {
-        print('School: $school, count: ${schoolContents[school]!.length}');
-      }
 
       // Build the master document content.
       final Content masterContent = Content();

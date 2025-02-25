@@ -32,7 +32,6 @@ class ScheduleRepository extends BaseScheduleRepository {
     stopwatch.reset();
     stopwatch.start();
     final String time = isAm ? 'AM' : 'PM';
-    print('TIME: $time');
     final List<Career> careers = await _getAllCareers();
     debugPrint(
       'Done downloading careers: ${stopwatch.elapsedMilliseconds} ms in',
@@ -44,14 +43,10 @@ class ScheduleRepository extends BaseScheduleRepository {
     final Map<String, School> schoolMap = {
       for (final school in schools) school.shortName: school,
     };
-    print(schoolMap);
     final List<Student> unfiltered = await _getAllStudents();
     final List<Student> students = unfiltered.where((student) {
       // Use the student's school field to get the corresponding School object from the map
       final School? studentSchool = schoolMap[student.school];
-      if (studentSchool?.time == time) {
-        print('Student: ${student.lastName}, School: ${student.school}');
-      }
       return studentSchool?.time == time;
     }).toList();
     debugPrint(
@@ -347,9 +342,6 @@ class ScheduleRepository extends BaseScheduleRepository {
 
     // Calculate demand for each career based on student preferences
     for (final Student student in students) {
-      if (student.lastName == 'Acevedo') {
-        print('Found Acevedo');
-      }
       for (int i = 0; i < 5; i++) {
         final int careerId = getCareerId(index: i, student: student);
         careerDemand[careerId.toString()] =
