@@ -23,7 +23,7 @@ class SchedulerApiClient {
     required String session,
   }) async {
     final DocumentReference ref =
-    await _firestore.collection(sessionsCollection).add({
+        await _firestore.collection(sessionsCollection).add({
       'time': Timestamp.fromDate(time),
       'session': session,
     });
@@ -50,9 +50,9 @@ class SchedulerApiClient {
     return querySnapshot.docs
         .map(
           (doc) => TimeSession.fromJson(
-        doc.data() as Map<String, dynamic>,
-      ),
-    ) // Assign the document ID to the TimeSession id field
+            doc.data() as Map<String, dynamic>,
+          ),
+        ) // Assign the document ID to the TimeSession id field
         .toList();
   }
 
@@ -158,16 +158,17 @@ class SchedulerApiClient {
     required String time,
   }) async {
     try {
-      // Initialize content for the master document
-      final Content masterContent = Content();
-
-      // Map to hold content for each school
+      // Lists to hold content for the master document and for each school.
+      final List<PlainContent> masterPlainContentList = [];
       final Map<String, List<PlainContent>> schoolContents = {};
 
+      print("There are ${schedules.length} schedules");
+
+      // Process each schedule.
       for (final ExportStudentSchedule schedule in schedules) {
         final List<RowContent> rows = [];
 
-        // Sort sessions based on time
+        // Sort sessions based on time (assumes all times are in 'hh:mm a' format).
         schedule.sessions.sort((a, b) {
           final DateFormat dateFormat = DateFormat('hh:mm a');
           final DateTime timeA = dateFormat.parse(a.time);
@@ -175,6 +176,7 @@ class SchedulerApiClient {
           return timeA.compareTo(timeB);
         });
 
+        // Build table rows for each session.
         for (final session in schedule.sessions) {
           rows.add(
             RowContent()
@@ -184,39 +186,55 @@ class SchedulerApiClient {
           );
         }
 
+        // Create a plain content block for the current schedule.
         final PlainContent plainContent = PlainContent('plainview')
           ..add(TextContent('school', schedule.school))
           ..add(TextContent('student', schedule.formattedName))
           ..add(TableContent('table', rows));
 
-        // Add to master content by creating a fresh ListContent each time
-        masterContent.add(ListContent('plainlist', [plainContent]));
+        // Add this content block to the master list.
+        masterPlainContentList.add(plainContent);
 
-        // Organize by school
+        // Group by school.
         if (!schoolContents.containsKey(schedule.school)) {
           schoolContents[schedule.school] = [];
         }
         schoolContents[schedule.school]!.add(plainContent);
       }
 
-      final ByteData masterData = await rootBundle
-          .load('assets/templates/student_schedule_template.docx');
+      // Debug log for school grouping.
+      for (final school in schoolContents.keys) {
+        print('School: $school, count: ${schoolContents[school]!.length}');
+      }
+
+      // Build the master document content.
+      final Content masterContent = Content();
+      masterContent.add(ListContent('plainlist', masterPlainContentList));
+
+      // Load the DOCX template for the master document.
+      final ByteData masterData = await rootBundle.load('assets/templates/student_schedule_template.docx');
       final Uint8List masterBytes = masterData.buffer.asUint8List();
       final docxTemplateMaster = await DocxTemplate.fromBytes(masterBytes);
 
+      // Generate the master document.
       final Uint8List masterDocBytes = Uint8List.fromList(
         (await docxTemplateMaster.generate(masterContent))!,
       );
       final String masterFileName = 'Student Schedules - $time.docx';
-      final String masterUploadResult =
-      await uploadFile(masterDocBytes, masterFileName);
+      final String masterUploadResult = await uploadFile(masterDocBytes, masterFileName);
 
+      // Generate a separate document for each school.
       for (final school in schoolContents.keys) {
+        // Reload a fresh copy of the template for each school document.
+        final ByteData schoolData = await rootBundle.load('assets/templates/student_schedule_template.docx');
+        final Uint8List schoolBytes = schoolData.buffer.asUint8List();
+        final docxTemplateSchool = await DocxTemplate.fromBytes(schoolBytes);
+
         final Content schoolContent = Content();
         schoolContent.add(ListContent('plainlist', schoolContents[school]!));
 
         final Uint8List schoolDocBytes = Uint8List.fromList(
-          (await docxTemplateMaster.generate(schoolContent))!,
+          (await docxTemplateSchool.generate(schoolContent))!,
         );
         final String schoolFileName = '$school Student Schedules.docx';
         await uploadFile(schoolDocBytes, schoolFileName);
@@ -227,6 +245,7 @@ class SchedulerApiClient {
       rethrow;
     }
   }
+
 
   Future<String> createAttendanceSchedule({
     required List<ExportCareerSchedule> careerSessions,
@@ -248,7 +267,7 @@ class SchedulerApiClient {
           if (students.isEmpty) continue;
           final TimeSession time = times[i];
           students.sort(
-                (a, b) => '${a.lastName}, ${a.firstName}'
+            (a, b) => '${a.lastName}, ${a.firstName}'
                 .compareTo('${b.lastName}, ${b.firstName}'),
           );
           final List<RowContent> rows = [];
