@@ -1,29 +1,76 @@
-
 include: package:flutter_lints/flutter.yaml
 
-linter:
+analyzer:
+  errors:
+    missing_required_param: error
+    missing_return: error
+    invalid_annotation_target: ignore
+  exclude:
+    - lib/**/*.g.dart
+    - lib/*.g.dart
+    - lib/**/*.freezed.dart
+    - test/**/*.mocks.dart
 
+linter:
   rules:
-    constant_identifier_names: false # allow lowercase enums
+    unawaited_futures: false
+    only_throw_errors: false
+    require_trailing_commas: true
+    directives_ordering: false
+    prefer_final_fields: true
+    sort_pub_dependencies: true
+    unnecessary_parenthesis: true
+    prefer_final_locals: true
+    avoid_dynamic_calls: false
+    use_build_context_synchronously: false
+    prefer_final_in_for_each: true
+    prefer_single_quotes: true
+    depend_on_referenced_packages: false
+    prefer_const_constructors: true
+    prefer_const_declarations: true
+    use_key_in_widget_constructors: true
+    sort_child_properties_last: true
+    avoid_void_async: true
+    always_declare_return_types: true
+    missing_whitespace_between_adjacent_strings: true
+    sized_box_for_whitespace: true
     prefer_const_literals_to_create_immutables: true
     prefer_const_constructors_in_immutables: true
-    use_full_hex_values_for_flutter_colors: true
-    avoid_multiple_declarations_per_line: true
-    use_build_context_synchronously: false
-    use_key_in_widget_constructors: true
-    avoid_web_libraries_in_flutter: true
-    avoid_unnecessary_containers: true
-    sort_child_properties_last: true
-    always_declare_return_types: true
-    prefer_const_declarations: true
-    use_rethrow_when_possible: true
-    type_annotate_public_apis: true
-    prefer_const_constructors: true
-    sized_box_for_whitespace: true
     no_logic_in_create_state: true
-    require_trailing_commas: true
+    avoid_unnecessary_containers: true
+    avoid_print: true
+    avoid_relative_lib_imports: true
+    empty_statements: true
+    no_adjacent_strings_in_list: true
+    no_duplicate_case_values: true
+    valid_regexps: true
+    unnecessary_statements: true
+    annotate_overrides: true
+    avoid_function_literals_in_foreach_calls: true
+    avoid_null_checks_in_equality_operators: true
+    avoid_unused_constructor_parameters: true
     camel_case_extensions: true
-    prefer_single_quotes: true
-    prefer_final_fields: true
-    eol_at_end_of_file: true
     camel_case_types: true
+    empty_constructor_bodies: true
+    file_names: true
+    prefer_is_empty: true
+    prefer_is_not_empty: true
+    prefer_is_not_operator: true
+    prefer_iterable_whereType: true
+    use_named_constants: true
+    use_raw_strings: true
+    use_rethrow_when_possible: true
+    use_setters_to_change_properties: true
+    use_string_buffers: true
+    use_string_in_part_of_directives: false
+    use_super_parameters: true
+    use_test_throws_matchers: true
+    use_to_and_as_if_applicable: true
+    void_checks: true
+    use_colored_box: true
+    use_enums: true
+    use_full_hex_values_for_flutter_colors: true
+    use_function_type_syntax_for_parameters: true
+    use_if_null_to_convert_nulls_to_bools: true
+    use_is_even_rather_than_modulo: true
+    use_late_for_private_fields_and_variables: true
