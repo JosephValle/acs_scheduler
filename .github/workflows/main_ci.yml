@@ -14,7 +14,7 @@ jobs:
 
       - uses: subosito/flutter-action@v1
         with:
-          flutter-version: '3.24.4'
+          flutter-version: '3.29.0'
 
       - name: Enable Flutter Web
         run: flutter config --enable-web
@@ -26,7 +26,7 @@ jobs:
         run: flutter packages pub run build_runner build --delete-conflicting-outputs
 
       - name: Build
-        run: flutter build web --web-renderer html --base-href /acs_scheduler/
+        run: flutter build web --base-href /acs_scheduler/
 
 #      - name: Create CNAME File
 #        run: echo "scheduler.adamscountyworks.org" > ./build/web/CNAME
