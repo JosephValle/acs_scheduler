@@ -8,7 +8,6 @@ version: 1.0.0
 environment:
   sdk: '>=3.2.3 <4.0.0'
 
-
 dependencies:
   app_links: ^6.3.2  # For deep linking
   app_tracking_transparency: ^2.0.4 # For tracking user data
