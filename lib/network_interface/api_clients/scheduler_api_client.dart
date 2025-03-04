@@ -202,7 +202,6 @@ class SchedulerApiClient {
         schoolContents[schedule.school]!.add(plainContent);
       }
 
-
       // Build the master document content.
       final Content masterContent = Content();
       masterContent.add(ListContent('plainlist', masterPlainContentList));
