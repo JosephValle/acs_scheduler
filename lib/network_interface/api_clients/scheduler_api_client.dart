@@ -270,7 +270,7 @@ class SchedulerApiClient {
           final List<RowContent> rows = [];
           // Handles up to 65 students in one class while also
           // Exporting the documents all on one sheet
-          const int increment = 25;
+          const int increment = 23;
           int number = 20;
 
           while (students.length > number) {
