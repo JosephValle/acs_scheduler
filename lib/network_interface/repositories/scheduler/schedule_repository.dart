@@ -87,7 +87,32 @@ class ScheduleRepository extends BaseScheduleRepository {
 
     // Final cleanup and sorting
     _finalCleanUp();
+    print("Total Students: ${students.length}");
+    int scheduledStudents = 0;
+    for (final StudentSchedule schedule in studentSchedules) {
+      scheduledStudents += schedule.sessions.length;
+    }
+    print("Scheduled Students: $scheduledStudents");
     debugPrint('Done All Scheduling: ${stopwatch.elapsedMilliseconds} ms in');
+
+    // for each carreer with 'busines' in the name, print out the time and attendees
+    final Map<String, int> careerSessionCount = {};
+
+    for (final ClassSession session in classes) {
+      if (session.career.name.toLowerCase().contains('business')) {
+        print('Attendees: ${session.students.length}, career: ${session.career.name}, time: ${session.timeSession.time}, excelNum: ${session.career.excelNum}');
+      }
+
+      // Increment the count for the career.id
+      careerSessionCount[session.career.id] = (careerSessionCount[session.career.id] ?? 0) + 1;
+    }
+
+// Print out the count for each career.id if greater than 3
+    careerSessionCount.forEach((careerId, count) {
+      if (count > 3) {
+        print('Career ID: $careerId has $count sessions');
+      }
+    });
 
     await _createInFirebase(
       careers: careers,
@@ -118,7 +143,7 @@ class ScheduleRepository extends BaseScheduleRepository {
         exportStudentSchedule.add(
           ExportStudentSchedule(
             formattedName:
-                '${schedule.student.lastName}, ${schedule.student.firstName}',
+            '${schedule.student.lastName}, ${schedule.student.firstName}',
             school: schedule.student.school,
             sessions: exportStudentSessions,
           ),
@@ -133,7 +158,7 @@ class ScheduleRepository extends BaseScheduleRepository {
       final List<ExportCareerSchedule> exportCareerSchedule = [];
       for (final Career career in careers) {
         final List<ClassSession> sessions =
-            classes.where((element) => element.career.id == career.id).toList();
+        classes.where((element) => element.career.id == career.id).toList();
         final List<int> counts = [0, 0, 0];
         final List<List<Student>> students = [[], [], []];
         sessions
@@ -177,6 +202,8 @@ class ScheduleRepository extends BaseScheduleRepository {
       debugPrint(
         'Done Creating Career export json: ${stopwatch.elapsedMilliseconds} ms in',
       );
+
+
 
       await _deleteCollection(firestore.collection('studentExport'));
 
@@ -233,9 +260,9 @@ class ScheduleRepository extends BaseScheduleRepository {
   }
 
   Future<void> _batchUpload(
-    CollectionReference collection,
-    List<Map<String, dynamic>> data,
-  ) async {
+      CollectionReference collection,
+      List<Map<String, dynamic>> data,
+      ) async {
     final WriteBatch batch = FirebaseFirestore.instance.batch();
     for (final item in data) {
       final DocumentReference docRef = collection.doc();
@@ -250,7 +277,7 @@ class ScheduleRepository extends BaseScheduleRepository {
       if (schoolCompare != 0) return schoolCompare;
 
       final int lastNameCompare =
-          a.student.lastName.compareTo(b.student.lastName);
+      a.student.lastName.compareTo(b.student.lastName);
       if (lastNameCompare != 0) return lastNameCompare;
 
       return a.student.firstName.compareTo(b.student.firstName);
@@ -259,15 +286,15 @@ class ScheduleRepository extends BaseScheduleRepository {
 
   void _finalAssignment() {
     final List<StudentSchedule> remainingSchedules =
-        studentSchedules.where((element) => !element.isFull).toList();
+    studentSchedules.where((element) => !element.isFull).toList();
 
     for (final StudentSchedule schedule in remainingSchedules) {
       final List<ClassSession> availableClasses = classes
           .where(
             (cs) =>
-                !cs.isFull &&
-                getSessionAvailable(correspondingClass: cs, schedule: schedule),
-          )
+        !cs.isFull &&
+            getSessionAvailable(correspondingClass: cs, schedule: schedule),
+      )
           .toList();
 
       // Sort available classes by the fewest number of students to balance class sizes
@@ -288,14 +315,14 @@ class ScheduleRepository extends BaseScheduleRepository {
   }) {
     // Iterate over each student schedule that isn't full
     final List<StudentSchedule> partiallyFilledSchedules =
-        studentSchedules.where((schedule) => !schedule.isFull).toList();
+    studentSchedules.where((schedule) => !schedule.isFull).toList();
     for (final StudentSchedule schedule in partiallyFilledSchedules) {
       // Revisit each student's career priorities for remaining open slots
       for (int priority = 0; priority < 5; priority++) {
         final int careerId =
-            getCareerId(index: priority, student: schedule.student);
+        getCareerId(index: priority, student: schedule.student);
         final Career? priorityCareer =
-            careers.firstWhereOrNull((career) => career.excelNum == careerId);
+        careers.firstWhereOrNull((career) => career.excelNum == careerId);
 
         if (priorityCareer == null) {
           continue;
@@ -304,13 +331,13 @@ class ScheduleRepository extends BaseScheduleRepository {
         final List<ClassSession> availableClasses = classes
             .where(
               (session) =>
-                  session.career.id == priorityCareer.id &&
-                  !session.isFull &&
-                  getSessionAvailable(
-                    correspondingClass: session,
-                    schedule: schedule,
-                  ),
-            )
+          session.career.id == priorityCareer.id &&
+              !session.isFull &&
+              getSessionAvailable(
+                correspondingClass: session,
+                schedule: schedule,
+              ),
+        )
             .toList();
 
         for (final ClassSession classSession in availableClasses) {
@@ -338,38 +365,21 @@ class ScheduleRepository extends BaseScheduleRepository {
     required List<TimeSession> sessions,
     required List<Student> students,
   }) {
-    final Map<String, int> careerDemand = {};
-
-    // Calculate demand for each career based on student preferences
-    for (final Student student in students) {
-      for (int i = 0; i < 5; i++) {
-        final int careerId = getCareerId(index: i, student: student);
-        careerDemand[careerId.toString()] =
-            (careerDemand[careerId.toString()] ?? 0) + 1;
-      }
-    }
+    // If more than 3 sessions exist, only consider the first 3.
+    final List<TimeSession> selectedSessions = sessions.length > 3 ? sessions.take(3).toList() : sessions;
 
     for (final Career career in careers) {
-      final int demand = careerDemand[career.excelNum.toString()] ?? 0;
-
-      // Calculate the maximum number of classes that can meet minClassSize
-      final int maxClassesBasedOnMinSize =
-          (demand / career.minClassSize).floor();
-      final int numberOfClasses = maxClassesBasedOnMinSize > 0
-          ? maxClassesBasedOnMinSize
-          : 1; // Ensure at least one class is created if there's any demand
-
-      for (final TimeSession session in sessions) {
-        for (int i = 0; i < numberOfClasses; i++) {
-          classes.add(
-            ClassSession(
-              timeSession: session,
-              career: career,
-              students: [],
-              uniqueId: _uuid.v4(),
-            ),
-          );
-        }
+      // Instead of calculating a variable numberOfClasses based on demand,
+      // simply create one class per selected session.
+      for (final TimeSession session in selectedSessions) {
+        classes.add(
+          ClassSession(
+            timeSession: session,
+            career: career,
+            students: [],
+            uniqueId: _uuid.v4(),
+          ),
+        );
       }
     }
   }
@@ -382,12 +392,12 @@ class ScheduleRepository extends BaseScheduleRepository {
     // Identify the placeholder career
     const int placeholderCareerExcelNum = 86; // Replace with actual excelNum
     final Career? placeholderCareer = careers.firstWhereOrNull(
-      (career) => career.excelNum == placeholderCareerExcelNum,
+          (career) => career.excelNum == placeholderCareerExcelNum,
     );
 
     // Identify the first session
     final TimeSession? firstSession =
-        sessions.isNotEmpty ? sessions.first : null;
+    sessions.isNotEmpty ? sessions.first : null;
 
     for (final Student student in students) {
       final StudentSchedule schedule = StudentSchedule(
@@ -402,8 +412,8 @@ class ScheduleRepository extends BaseScheduleRepository {
           firstSession != null) {
         // Assign NOHS students to the placeholder class in the first session
         final ClassSession? placeholderClass = classes.firstWhereOrNull(
-          (cs) =>
-              cs.career.id == placeholderCareer.id &&
+              (cs) =>
+          cs.career.id == placeholderCareer.id &&
               cs.timeSession.time == firstSession.time,
         );
 
@@ -417,7 +427,7 @@ class ScheduleRepository extends BaseScheduleRepository {
       for (int i = 0; i < 5; i++) {
         final int careerPriority = getCareerId(index: i, student: student);
         final Career? career = careers.firstWhereOrNull(
-          (element) => element.excelNum == careerPriority,
+              (element) => element.excelNum == careerPriority,
         );
 
         if (career == null) {
@@ -433,13 +443,13 @@ class ScheduleRepository extends BaseScheduleRepository {
         final List<ClassSession> correspondingClasses = classes
             .where(
               (element) =>
-                  element.career.id == career.id &&
-                  !element.isFull &&
-                  getSessionAvailable(
-                    correspondingClass: element,
-                    schedule: schedule,
-                  ),
-            )
+          element.career.id == career.id &&
+              !element.isFull &&
+              getSessionAvailable(
+                correspondingClass: element,
+                schedule: schedule,
+              ),
+        )
             .toList()
           ..sort((a, b) => a.students.length.compareTo(b.students.length));
 
@@ -493,13 +503,13 @@ class ScheduleRepository extends BaseScheduleRepository {
     required StudentSchedule schedule,
   }) =>
       !schedule.sessions.any(
-        (session) =>
-            correspondingClass.timeSession.time == session.timeSession.time,
+            (session) =>
+        correspondingClass.timeSession.time == session.timeSession.time,
       ) &&
-      !schedule.sessions.any(
-        (session) =>
+          !schedule.sessions.any(
+                (session) =>
             session.career.excelNum == correspondingClass.career.excelNum,
-      );
+          );
 
   void _consolidateClasses({
     required List<Career> careers,
@@ -508,15 +518,15 @@ class ScheduleRepository extends BaseScheduleRepository {
     // Identify the placeholder career and first session
     const int placeholderCareerExcelNum = 86; // Replace with actual excelNum
     final Career? placeholderCareer = careers.firstWhereOrNull(
-      (career) => career.excelNum == placeholderCareerExcelNum,
+          (career) => career.excelNum == placeholderCareerExcelNum,
     );
     final TimeSession? firstSession =
-        sessions.isNotEmpty ? sessions.first : null;
+    sessions.isNotEmpty ? sessions.first : null;
 
     // Group classes by career and time session
     final groupedClasses = groupBy(
       classes,
-      (ClassSession cs) => '${cs.career.id}-${cs.timeSession.time}',
+          (ClassSession cs) => '${cs.career.id}-${cs.timeSession.time}',
     );
 
     final List<ClassSession> newClasses = [];
@@ -534,7 +544,7 @@ class ScheduleRepository extends BaseScheduleRepository {
 
       // Merge students from all classes in the group
       final List<Student> allStudents =
-          group.expand((cs) => cs.students).toList();
+      group.expand((cs) => cs.students).toList();
 
       // If total students are less than minClassSize, handle accordingly
       if (allStudents.length < career.minClassSize) {
@@ -574,8 +584,8 @@ class ScheduleRepository extends BaseScheduleRepository {
           if (schedule != null) {
             // Remove old class sessions for this time and career
             schedule.sessions.removeWhere(
-              (cs) =>
-                  cs.career.id == career.id &&
+                  (cs) =>
+              cs.career.id == career.id &&
                   cs.timeSession.time == timeSession.time,
             );
             schedule.sessions.add(newClass);
@@ -595,10 +605,10 @@ class ScheduleRepository extends BaseScheduleRepository {
     // Identify the placeholder career and first session
     const int placeholderCareerExcelNum = 86; // Replace with actual excelNum
     final Career? placeholderCareer = careers.firstWhereOrNull(
-      (career) => career.excelNum == placeholderCareerExcelNum,
+          (career) => career.excelNum == placeholderCareerExcelNum,
     );
     final TimeSession? firstSession =
-        sessions.isNotEmpty ? sessions.first : null;
+    sessions.isNotEmpty ? sessions.first : null;
 
     for (final ClassSession cs in classes) {
       // Skip the placeholder class in the first session
@@ -610,14 +620,14 @@ class ScheduleRepository extends BaseScheduleRepository {
       if (cs.students.length > cs.career.maxClassSize) {
         final int overflow = cs.students.length - cs.career.maxClassSize;
         final List<Student> studentsToReassign =
-            cs.students.take(overflow).toList();
+        cs.students.take(overflow).toList();
         cs.students.removeRange(0, overflow);
 
         for (final Student student in studentsToReassign) {
           // Find another class for this student
           final ClassSession? alternativeClass = classes.firstWhereOrNull(
-            (c) =>
-                c.career.id == cs.career.id &&
+                (c) =>
+            c.career.id == cs.career.id &&
                 c.timeSession.time == cs.timeSession.time &&
                 !c.isFull &&
                 c.uniqueId != cs.uniqueId,
@@ -645,7 +655,7 @@ class ScheduleRepository extends BaseScheduleRepository {
   }) {
     const int placeholderCareerExcelNum = 86; // Replace with actual excelNum
     final Career? placeholderCareer = careers.firstWhereOrNull(
-      (career) => career.excelNum == placeholderCareerExcelNum,
+          (career) => career.excelNum == placeholderCareerExcelNum,
     );
     final List<ClassSession> underEnrolledClasses = classes.where((cs) {
       return cs.students.length < cs.career.minClassSize;
@@ -680,13 +690,13 @@ class ScheduleRepository extends BaseScheduleRepository {
             final List<ClassSession> availableClasses = classes
                 .where(
                   (session) =>
-                      session.career.id == priorityCareer.id &&
-                      !session.isFull &&
-                      getSessionAvailable(
-                        correspondingClass: session,
-                        schedule: schedule,
-                      ),
-                )
+              session.career.id == priorityCareer.id &&
+                  !session.isFull &&
+                  getSessionAvailable(
+                    correspondingClass: session,
+                    schedule: schedule,
+                  ),
+            )
                 .toList();
 
             if (availableClasses.isNotEmpty) {
@@ -717,10 +727,10 @@ class ScheduleRepository extends BaseScheduleRepository {
     final List<ClassSession> availableClasses = classes
         .where(
           (cs) =>
-              !cs.isFull &&
-              getSessionAvailable(correspondingClass: cs, schedule: schedule) &&
-              !(excludeCareers?.contains(cs.career.id) ?? false),
-        )
+      !cs.isFull &&
+          getSessionAvailable(correspondingClass: cs, schedule: schedule) &&
+          !(excludeCareers?.contains(cs.career.id) ?? false),
+    )
         .toList();
 
     // Sort available classes by the fewest number of students to balance class sizes
